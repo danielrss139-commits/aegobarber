@@ -23,6 +23,7 @@
 <script src="db-firebase.js" defer></script>
 <script src="db-demo.js" defer></script>
 <script src="agendar.js" defer></script>
+<script src="avaliacoes.js" defer></script>
 </head>
 <body class="pg-cliente">
 <div id="intro" class="abertura" aria-hidden="true" data-sub="Agendamento online"></div>
@@ -72,6 +73,19 @@
       <input class="input num" id="zap" type="tel" inputmode="numeric" autocomplete="tel-national" placeholder="(00) 9 0000-0000" maxlength="20">
       <span class="field-hint">Só para a barbearia confirmar com você.</span>
     </label>
+  </section>
+
+  <section class="step gl av-sec" id="avaliacoes" aria-labelledby="tav">
+    <div class="step-head"><h2 class="step-title" id="tav">Avaliações</h2><span class="step-note" id="av-media"></span></div>
+    <ul class="av-lista" id="av-lista"></ul>
+    <form class="av-form" id="av-form" novalidate>
+      <span class="field-label">Deixe sua avaliação</span>
+      <div class="av-estrelas" id="av-estrelas" role="radiogroup" aria-label="Nota de 1 a 5"></div>
+      <input class="input" id="av-nome" type="text" placeholder="Seu nome" maxlength="40" autocomplete="name">
+      <textarea class="input av-txt" id="av-txt" placeholder="Como foi o seu atendimento?" maxlength="280" rows="3"></textarea>
+      <p class="msg hidden" id="av-msg" role="status"></p>
+      <button class="btn opt" type="submit">Enviar avaliação</button>
+    </form>
   </section>
 
   <footer class="foot gl" id="rodape"></footer>
