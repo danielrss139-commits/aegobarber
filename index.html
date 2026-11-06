@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AEGO Barber — Agendamento online para barbearias</title>
+<meta name="description" content="Site de agendamento e painel do barbeiro para sua barbearia. Seus clientes marcam pelo celular, você controla a agenda e o caixa.">
+<meta name="theme-color" content="#0b0b0b">
+<link rel="icon" href="/demo/icons/favicon-32.png" sizes="32x32">
+<link rel="preload" href="/demo/fonts/hanken-grotesk.woff2" as="font" type="font/woff2" crossorigin>
+<style>
+@font-face{font-family:"Hanken Grotesk";src:url(/demo/fonts/hanken-grotesk.woff2) format("woff2");font-weight:100 900;font-display:swap}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:"Hanken Grotesk",system-ui,sans-serif;background:#0b0b0b;color:#f2f2f2;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:28px;
+background-image:radial-gradient(circle at 20% 10%,rgba(201,162,92,.16),transparent 45%),radial-gradient(circle at 85% 90%,rgba(255,255,255,.06),transparent 40%)}
+.card{max-width:520px;width:100%;padding:40px 30px;border-radius:24px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);backdrop-filter:blur(14px);text-align:center}
+.marca{font-size:13px;letter-spacing:.32em;color:#c9a25c;font-weight:700}
+h1{font-size:32px;line-height:1.15;margin:16px 0 12px;font-weight:800}
+p{color:#bdbdbd;line-height:1.55;font-size:16px}
+ul{list-style:none;margin:24px 0;text-align:left;display:grid;gap:10px}
+li{padding:12px 14px;border-radius:14px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);font-size:15px}
+li b{color:#c9a25c}
+.btn{display:block;margin-top:10px;padding:16px;border-radius:14px;font-weight:700;text-decoration:none;font-size:16px}
+.p{background:#c9a25c;color:#111}
+.s{border:1px solid rgba(255,255,255,.18);color:#f2f2f2}
+small{display:block;margin-top:22px;color:#777;font-size:13px}
+</style>
+</head>
+<body>
+<main class="card">
+  <div class="marca">AEGO BARBER</div>
+  <h1>Sua barbearia com agendamento online</h1>
+  <p>Seus clientes marcam o horário pelo celular, sem precisar de mensagem. Você acompanha tudo num painel só seu.</p>
+  <ul>
+    <li><b>Agenda 24h:</b> o cliente escolhe serviço, dia e horário</li>
+    <li><b>Painel do barbeiro:</b> agenda, atendimentos e caixa</li>
+    <li><b>Sua marca:</b> logo, cores, serviços e preços da sua loja</li>
+  </ul>
+  <a class="btn p" href="/demo/">Ver a demonstração</a>
+  <a class="btn s" href="/demo/painel.html">Ver o painel do barbeiro</a>
+  <small>Demonstração: os agendamentos ficam só no seu aparelho.</small>
+</main>
+</body>
+</html>
