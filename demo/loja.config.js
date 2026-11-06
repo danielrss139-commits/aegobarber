@@ -22,12 +22,12 @@ window.LOJA = {
   mapa: '',
   avaliacao: { nota: '4,9', total: '128', fonte: 'Google' },
   servicos: [
-    { nome: 'Corte',          preco: 40, minutos: 40, icone: 'tesoura',     descricao: 'Tesoura e máquina, acabamento na navalha' },
-    { nome: 'Barba',          preco: 30, minutos: 30, icone: 'barba',       descricao: 'Toalha quente, navalha e contorno alinhado' },
-    { nome: 'Corte + Barba',  preco: 60, minutos: 60, icone: 'combo',       descricao: 'O combo completo, com calma' },
-    { nome: 'Degradê',        preco: 45, minutos: 45, icone: 'maquina',     descricao: 'Transição suave na máquina e na navalha' },
-    { nome: 'Sobrancelha',    preco: 15, minutos: 15, icone: 'sobrancelha', descricao: 'Desenho limpo, sem exagero' },
-    { nome: 'Corte infantil', preco: 35, minutos: 30, icone: 'infantil',    descricao: 'Paciência e capricho para os pequenos' }
+    { nome: 'Corte',          preco: 40, minutos: 40, icone: 'tesoura', foto: 'img/svc/corte.webp',     descricao: 'Corte social na tesoura e no pente' },
+    { nome: 'Barba',          preco: 30, minutos: 30, icone: 'barba', foto: 'img/svc/barba.webp',       descricao: 'Toalha quente, navalha e contorno alinhado' },
+    { nome: 'Corte + Barba',  preco: 60, minutos: 60, icone: 'combo', foto: 'img/svc/corte-barba.webp',       descricao: 'O combo completo, com calma' },
+    { nome: 'Degradê',        preco: 45, minutos: 45, icone: 'maquina', foto: 'img/svc/degrade.webp',     descricao: 'Transição suave na máquina e na navalha' },
+    { nome: 'Sobrancelha',    preco: 15, minutos: 15, icone: 'sobrancelha', foto: 'img/svc/sobrancelha.webp', descricao: 'Desenho limpo, sem exagero' },
+    { nome: 'Corte infantil', preco: 35, minutos: 30, icone: 'infantil', foto: 'img/svc/infantil.webp',    descricao: 'Paciência e capricho para os pequenos' }
   ],
   horario: {
     seg: ['09:00', '19:00'], ter: ['09:00', '19:00'], qua: ['09:00', '19:00'], qui: ['09:00', '19:00'],
