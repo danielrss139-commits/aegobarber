@@ -810,3 +810,10 @@ body::after { background:
     radial-gradient(35% 20% at 80% 12%, rgba(255,255,255,.9), transparent 70%) !important; }
 /* capa some no fundo vivo (sem emenda) */
 .capa { -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 78%, transparent 100%); mask-image: linear-gradient(180deg, #000 0%, #000 78%, transparent 100%); }
+
+/* capa sem travar (2026-11-07): nada se move na rolagem; zoom suave só ao abrir */
+@keyframes capaEntra { from { transform: scale(1.14); opacity: 0; } to { transform: scale(1.02); opacity: 1; } }
+.capa-img { transform: scale(1.02) !important; filter: none !important; will-change: auto !important; animation: capaEntra 2.2s cubic-bezier(.2,.7,.2,1) both; }
+.capa-logo { transform: translateX(-50%) !important; transition: opacity .2s linear; }
+.capa-frase { transform: none !important; transition: opacity .2s linear; }
+@media (prefers-reduced-motion: reduce) { .capa-img { animation: none; } }
