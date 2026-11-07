@@ -12,9 +12,9 @@ window.LOJA = {
   slogan: 'Marque seu horário em um minuto.',
   logo: '',                     // sem logo: usa o monograma "BM"
   monograma: '',
-  corDestaque: '#d9b77e',
+  corDestaque: '#151515',
   fundo: { imagem: '', escurecer: 0.55 },
-  whatsapp: '5511900000000',    // número fictício
+  whatsapp: '5571983901535',    // WhatsApp da AEGO (demonstração)
   instagram: 'barbeariamodelo',
   email: '',
   endereco: 'Rua das Navalhas, 100 · Centro',

@@ -49,13 +49,28 @@
     if (LJ.endereco) linhas.push('<span>' + esc(LJ.endereco) + '</span>');
     resumoHorario(cfg || LJ.config).forEach(function (h) { linhas.push('<span>' + esc(h) + '</span>'); });
     var bt = '';
-    if (ZAP) bt += '<a class="btn btn-ghost btn-sm" href="https://wa.me/' + esc(ZAP) + '" target="_blank" rel="noopener noreferrer">WhatsApp</a>';
-    if (INSTA) bt += '<a class="btn btn-ghost btn-sm" href="' + esc(INSTA) + '" target="_blank" rel="noopener noreferrer">Instagram</a>';
+    if (ZAP) bt += '<a class="btn btn-ghost btn-sm" href="https://wa.me/' + esc(ZAP) + '" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" aria-hidden="true"><path class="wa" d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38a9.9 9.9 0 0 0 4.74 1.21c5.46 0 9.91-4.45 9.91-9.91C21.95 6.45 17.5 2 12.04 2Zm5.8 14.13c-.25.69-1.44 1.32-1.98 1.36-.53.05-1.03.24-3.47-.72-2.93-1.16-4.79-4.17-4.94-4.36-.14-.19-1.18-1.57-1.18-3 0-1.42.75-2.13 1.01-2.42.27-.29.58-.36.78-.36.19 0 .39 0 .56.01.18.01.42-.07.66.5.25.59.84 2.03.91 2.18.07.15.12.32.02.51-.1.19-.15.32-.29.49-.15.17-.31.38-.44.51-.15.15-.3.31-.13.6.17.29.76 1.25 1.63 2.03 1.12 1 2.06 1.31 2.35 1.45.29.15.46.12.63-.07.17-.19.73-.85.92-1.15.19-.29.39-.24.66-.15.27.1 1.71.81 2 .96.29.15.49.22.56.34.07.12.07.69-.18 1.39Z"/></svg>WhatsApp</a>';
+    if (INSTA) bt += '<a class="btn btn-ghost btn-sm" href="' + esc(INSTA) + '" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" aria-hidden="true"><defs><linearGradient id="igg" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="#FEDA75"/><stop offset=".35" stop-color="#FA7E1E"/><stop offset=".6" stop-color="#D62976"/><stop offset=".85" stop-color="#962FBF"/><stop offset="1" stop-color="#4F5BD5"/></linearGradient></defs><rect class="ig" x="2.5" y="2.5" width="19" height="19" rx="5.5"/><circle class="ig" cx="12" cy="12" r="4.3"/><circle class="igd" cx="17.4" cy="6.6" r="1.3"/></svg>Instagram</a>';
     if (MAPS) bt += '<a class="btn btn-ghost btn-sm" href="' + esc(MAPS) + '" target="_blank" rel="noopener noreferrer">Como chegar</a>';
     if (LJ.email) linhas.push('<a href="mailto:' + esc(LJ.email) + '">' + esc(LJ.email) + '</a>');
     $('rodape').innerHTML = '<div class="foot-txt">' + linhas.join('') + '</div>' + (bt ? '<div class="foot-bt">' + bt + '</div>' : '');
   }
   renderTrust(); renderRodape();
+  // capa: movimento suave conforme desce
+  (function () {
+    var c = document.querySelector('.capa'); if (!c) return; var r0 = 0;
+    function up() { r0 = 0; var h = c.offsetHeight || 1; var s = window.scrollY / h; s = s < 0 ? 0 : s > 1 ? 1 : s; c.style.setProperty('--s', s.toFixed(3)); }
+    window.addEventListener('scroll', function () { if (!r0) r0 = requestAnimationFrame(up); }, { passive: true }); up();
+  })();
+  // foto final: abre conforme a rolagem se aproxima do fim
+  (function () {
+    var f = document.getElementById('final'); if (!f) return;
+    var raf = 0;
+    function upd() { raf = 0; var r = f.getBoundingClientRect(), vh = window.innerHeight || 1;
+      var p = (vh - r.top) / (r.height * .9); p = p < 0 ? 0 : p > 1 ? 1 : p; f.style.setProperty('--p', p.toFixed(3)); }
+    window.addEventListener('scroll', function () { if (!raf) raf = requestAnimationFrame(upd); }, { passive: true });
+    window.addEventListener('resize', upd); upd();
+  })();
   if (LJ.ddd) $('zap').placeholder = '(' + LJ.ddd + ') 9 0000-0000';
 
   /* descrição e foto opcional (loja.config.js) ou cartão com ícone */

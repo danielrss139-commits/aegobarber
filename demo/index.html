@@ -31,7 +31,11 @@
 
 <main id="fluxo" class="wrap">
   <header class="hero">
-    <a class="logo-wrap rise" style="--i:0" href="index.html" data-marca="marca-hero" aria-label="Início"></a>
+    <div class="capa rise" style="--i:0">
+      <img class="capa-img" src="img/capa.webp" alt="" width="736" height="1020" fetchpriority="high">
+      <img class="capa-logo" src="img/aego-logo.png" alt="AEGO">
+      <p class="capa-frase">Cada corte<br>conta uma história.</p>
+    </div>
     <h1 class="hero-nome rise" style="--i:1" data-loja="nome"></h1>
     <p class="hero-lede rise" style="--i:2" data-loja="slogan"></p>
     <ul class="trust rise" style="--i:3" id="trust" aria-label="Sobre a barbearia"></ul>
@@ -89,7 +93,11 @@
   </section>
 
   <footer class="foot gl" id="rodape"></footer>
-  <div class="bar-spacer"></div>
+  <section class="final" id="final" aria-hidden="true">
+    <img class="final-img" src="img/final.webp" alt="" width="736" height="920" loading="lazy">
+    <p class="final-txt">Seu corte<br>diz quem<br>você é.<small>Agende o seu em um minuto.</small></p>
+  </section>
+  <div class="bar-spacer bar-spacer-final"></div>
 </main>
 
 <main id="sucesso" class="wrap hidden" aria-live="polite"></main>
