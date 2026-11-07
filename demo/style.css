@@ -817,3 +817,22 @@ body::after { background:
 .capa-logo { transform: translateX(-50%) !important; transition: opacity .2s linear; }
 .capa-frase { transform: none !important; transition: opacity .2s linear; }
 @media (prefers-reduced-motion: reduce) { .capa-img { animation: none; } }
+
+/* ---------- fluidez (rolagem leve no celular) ----------
+   - cartões que rolam: sem backdrop-filter (o fundo atrás é liso, o vidro continua pelo degradê e borda)
+   - desfoque só no que fica parado na tela (barra, folha, aviso), menor
+   - fundo parado: sem manchas animadas e sem granulado gerado por filtro SVG
+   - foto final: entra uma vez com transição, sem recalcular blur a cada quadro */
+.gl, .gc, .glass, .gl2, .ag, .opt, .trust li, .marquee-item, .chip {
+  -webkit-backdrop-filter: none !important; backdrop-filter: none !important; }
+.gl, .gc, .glass, .gl2, .nav, .bar { text-shadow: none; }
+.bar, .sheet, .toast, .aviso { -webkit-backdrop-filter: blur(12px) !important; backdrop-filter: blur(12px) !important; }
+.fundo-luz, .fundo-luz2 { animation: none !important; will-change: auto; }
+body::before { display: none; }
+.final::after { display: none; }
+.final-img, .final-txt { filter: none !important; will-change: auto; }
+.final { --p: 0; }
+.final-img { transition: opacity .9s var(--ease), transform .9s var(--ease); }
+.final-txt { transition: opacity .9s var(--ease) .15s; }
+.final.is-in { --p: 1; }
+html.rolando .marquee-track { animation-play-state: paused; }

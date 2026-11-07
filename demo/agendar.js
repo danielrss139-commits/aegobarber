@@ -56,20 +56,17 @@
     $('rodape').innerHTML = '<div class="foot-txt">' + linhas.join('') + '</div>' + (bt ? '<div class="foot-bt">' + bt + '</div>' : '');
   }
   renderTrust(); renderRodape();
-  // capa: movimento suave conforme desce
-  (function () {
-    var c = document.querySelector('.capa'); if (!c) return; var r0 = 0;
-    function up() { r0 = 0; var h = c.offsetHeight || 1; var s = window.scrollY / h; s = s < 0 ? 0 : s > 1 ? 1 : s; c.style.setProperty('--s', s.toFixed(3)); }
-    window.addEventListener('scroll', function () { if (!r0) r0 = requestAnimationFrame(up); }, { passive: true }); up();
-  })();
-  // foto final: abre conforme a rolagem se aproxima do fim
+  // foto final: entra uma vez quando aparece (sem recalcular a cada quadro de rolagem)
   (function () {
     var f = document.getElementById('final'); if (!f) return;
-    var raf = 0;
-    function upd() { raf = 0; var r = f.getBoundingClientRect(), vh = window.innerHeight || 1;
-      var p = (vh - r.top) / (r.height * .9); p = p < 0 ? 0 : p > 1 ? 1 : p; f.style.setProperty('--p', p.toFixed(3)); }
-    window.addEventListener('scroll', function () { if (!raf) raf = requestAnimationFrame(upd); }, { passive: true });
-    window.addEventListener('resize', upd); upd();
+    if (!('IntersectionObserver' in window)) { f.classList.add('is-in'); return; }
+    var io = new IntersectionObserver(function (ents) { if (ents[0].isIntersecting) { f.classList.add('is-in'); io.disconnect(); } }, { rootMargin: '0px 0px -15% 0px' });
+    io.observe(f);
+  })();
+  // durante a rolagem, pausa o letreiro para sobrar fôlego
+  (function () {
+    var h = document.documentElement, t = 0;
+    window.addEventListener('scroll', function () { if (!t) h.classList.add('rolando'); clearTimeout(t); t = setTimeout(function () { h.classList.remove('rolando'); t = 0; }, 160); }, { passive: true });
   })();
   if (LJ.ddd) $('zap').placeholder = '(' + LJ.ddd + ') 9 0000-0000';
 
