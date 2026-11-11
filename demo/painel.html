@@ -2,7 +2,7 @@
 <html lang="pt-BR" data-intro="painel">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://www.gstatic.com/firebasejs/; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self' https://firestore.googleapis.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://content-firebaseappcheck.googleapis.com; manifest-src 'self'; worker-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://www.gstatic.com/firebasejs/; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self' https://firestore.googleapis.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://content-firebaseappcheck.googleapis.com; manifest-src 'self'; worker-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'none'">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0b0b0b">
@@ -17,15 +17,19 @@
 <link rel="preload" href="fonts/hanken-grotesk.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preconnect" href="https://www.gstatic.com" crossorigin>
 <link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="aego-pro.css">
 <script src="loja.config.js"></script>
 <script src="boot.js"></script>
 <script src="firebase-config.js" defer></script>
+<script src="icones.js" defer></script>
 <script src="comum.js" defer></script>
 <script src="db-firebase.js" defer></script>
 <script src="db-demo.js" defer></script>
+<script src="produto3d.js" defer></script>
 <script src="painel.js" defer></script>
+<script src="painel-pro.js" defer></script>
 </head>
-<body class="pg-painel">
+<body class="pg-painel pro">
 <div id="intro" class="abertura" aria-hidden="true" data-sub="Painel do barbeiro"></div>
 <div class="fundo" aria-hidden="true"><span class="fundo-luz"></span><span class="fundo-luz2"></span></div>
 
@@ -62,74 +66,148 @@
 
 <!-- ===================== APP ===================== -->
 <div id="app" class="hidden">
-  <main class="wrap">
+  <aside class="side lg" id="side" aria-label="Menu">
+    <a class="side-brand" href="index.html" aria-label="Página do cliente"><span data-marca="marca-sm"></span><span class="side-brand-t"><b data-loja="nome"></b><small>Painel profissional</small></span></a>
+    <nav class="side-nav"><button class="side-i is-on" data-v="inicio" type="button"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3 9.5L10 3.5l7 6V17a1 1 0 0 1-1 1h-4v-5H8v5H4a1 1 0 0 1-1-1z"/></svg><span>Início</span></button><button class="side-i" data-v="agenda" type="button"><svg viewBox="0 0 20 20" aria-hidden="true"><rect x="3" y="4" width="14" height="13" rx="2"/><path d="M3 8h14M7 2.5v3M13 2.5v3"/></svg><span>Agenda</span></button><button class="side-i" data-v="clientes" type="button"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="8" cy="7" r="3"/><path d="M2.5 17c.6-3 2.8-4.5 5.5-4.5s4.9 1.5 5.5 4.5"/><path d="M13 4.2a3 3 0 0 1 0 5.6M15 12.8c1.3.6 2.2 2 2.5 4.2"/></svg><span>Clientes</span></button><button class="side-i" data-v="produtos" type="button"><svg viewBox="0 0 20 20" aria-hidden="true"><rect x="3.5" y="8" width="13" height="9" rx="2"/><path d="M3.5 8.5c0-1.8 2.9-3 6.5-3s6.5 1.2 6.5 3M3.5 12h13"/></svg><span>Produtos</span><b class="side-badge hidden" id="badgeEstoque"></b></button><button class="side-i" data-v="fin" type="button"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3 16.5h14M5.5 13.5v-4M10 13.5V5M14.5 13.5v-6"/></svg><span>Financeiro</span></button><button class="side-i" data-v="aj" type="button"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3 6h9M15 6h2M3 14h2M8 14h9"/><circle cx="13.5" cy="6" r="1.8"/><circle cx="6.5" cy="14" r="1.8"/></svg><span>Ajustes</span></button></nav>
+    <div class="side-foot">
+      <a class="side-link" href="index.html" target="_blank" rel="noopener"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M11 3.5h5.5V9M16.5 3.5L9 11M14 12v3.5a1 1 0 0 1-1 1H4.5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1H8"/></svg><span>Ver site do cliente</span></a>
+      <button class="side-link" type="button" data-sair><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M8 3.5H4.5a1 1 0 0 0-1 1v11a1 1 0 0 0 1 1H8M12.5 6.5L16 10l-3.5 3.5M16 10H7.5"/></svg><span>Sair</span></button>
+    </div>
+  </aside>
+
+  <main class="wrap pro-main">
     <div class="top">
       <a class="wordmark" href="index.html" aria-label="Página do cliente" data-marca="marca-sm"></a>
-      <div class="top-txt"><div class="top-g" id="topG">Olá</div><div class="top-n" data-loja="nome"></div></div>
-      <div class="top-date" id="topDate"></div>
+      <div class="top-txt"><div class="top-g" id="topG">Olá</div><div class="top-n" id="topN">Início</div></div>
+      <div class="top-acts">
+        <button class="btn btn-ghost btn-sm top-novo" type="button" data-acao="novo-ag"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 4v12M4 10h12"/></svg><span>Agendamento</span></button>
+        <button class="btn btn-primary btn-sm top-novo" type="button" data-acao="novo-prod"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 2.5l1.6 4 4 1.6-4 1.6-1.6 4-1.6-4-4-1.6 4-1.6z"/><path d="M15.5 13l.7 1.8 1.8.7-1.8.7-.7 1.8-.7-1.8-1.8-.7 1.8-.7z"/></svg><span>Produto com IA</span></button>
+        <div class="top-date" id="topDate"></div>
+        <button class="ibtn top-aj" type="button" data-v="aj" aria-label="Ajustes"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3 6h9M15 6h2M3 14h2M8 14h9"/><circle cx="13.5" cy="6" r="1.8"/><circle cx="6.5" cy="14" r="1.8"/></svg></button>
+      </div>
     </div>
 
+    <!-- INÍCIO (visão geral) -->
+    <section class="view" id="v-inicio" aria-label="Visão geral">
+      <div class="kpis" id="kpis"></div>
+      <div class="g-dash">
+        <div class="lg card c-prox"><div class="card-h"><h2>Próximos clientes</h2><button class="btn btn-text btn-sm" type="button" data-v="agenda">Agenda</button></div><ul class="mini-list" id="proxLista"></ul></div>
+        <div class="lg card c-graf"><div class="card-h"><h2>Faturamento · 14 dias</h2><span class="leg"><i class="lg-s"></i>Serviços <i class="lg-p"></i>Produtos</span></div><div class="graf" id="graf14"></div></div>
+        <div class="lg card c-top"><div class="card-h"><h2>Serviços do mês</h2></div><div id="topSvc"></div></div>
+        <div class="lg card c-alerta"><div class="card-h"><h2>Atenção</h2></div><ul class="mini-list" id="alertas"></ul></div>
+      </div>
+    </section>
+
     <!-- AGENDA -->
-    <section class="view" id="v-agenda" aria-label="Agenda">
-      <div class="dash gl ent" style="--k:0" aria-label="Resumo de hoje">
-        <div class="dash-ring" id="ringOcup"></div>
-        <div class="hoje">
-          <div class="hs"><span class="hs-n num" id="hsH">0</span><span class="hs-l">Horários hoje</span></div>
-          <div class="hs"><span class="hs-n num" id="hsP">R$ 0</span><span class="hs-l">Previsto</span></div>
-          <div class="hs"><span class="hs-n num" id="hsA">0</span><span class="hs-l">Atendidos</span></div>
+    <section class="view" id="v-agenda" aria-label="Agenda" hidden>
+      <div class="ag-grid">
+        <div class="ag-col-l">
+          <div class="dash lg ent" style="--k:0" aria-label="Resumo de hoje">
+            <div class="dash-ring" id="ringOcup"></div>
+            <div class="hoje">
+              <div class="hs"><span class="hs-n num" id="hsH">0</span><span class="hs-l">Horários hoje</span></div>
+              <div class="hs"><span class="hs-n num" id="hsP">R$ 0</span><span class="hs-l">Previsto</span></div>
+              <div class="hs"><span class="hs-n num" id="hsA">0</span><span class="hs-l">Atendidos</span></div>
+            </div>
+          </div>
+          <div class="semana lg" id="semana" role="group" aria-label="Semana"></div>
+        </div>
+        <div class="ag-col-r">
+          <div class="dayswitch ent" style="--k:1">
+            <button class="ibtn" id="diaAnt" type="button" aria-label="Dia anterior"><svg viewBox="0 0 18 18"><path d="M11 3.5L5.5 9l5.5 5.5"/></svg></button>
+            <div class="dayswitch-mid"><div class="dayswitch-t" id="diaT"></div><div class="dayswitch-s" id="diaS"></div></div>
+            <button class="ibtn" id="diaProx" type="button" aria-label="Próximo dia"><svg viewBox="0 0 18 18"><path d="M7 3.5L12.5 9 7 14.5"/></svg></button>
+          </div>
+          <div class="sumline ent" style="--k:2">
+            <span class="small" id="agSum"></span>
+            <span class="sumline-b"><button class="btn btn-ghost btn-sm" id="irHoje" type="button">Hoje</button>
+            <button class="btn btn-primary btn-sm" type="button" data-acao="novo-ag">+ Agendar</button></span>
+          </div>
+          <ul class="list" id="agLista"></ul>
         </div>
       </div>
-      <div class="dayswitch ent" style="--k:1">
-        <button class="ibtn" id="diaAnt" type="button" aria-label="Dia anterior"><svg viewBox="0 0 18 18"><path d="M11 3.5L5.5 9l5.5 5.5"/></svg></button>
-        <div class="dayswitch-mid"><div class="dayswitch-t" id="diaT"></div><div class="dayswitch-s" id="diaS"></div></div>
-        <button class="ibtn" id="diaProx" type="button" aria-label="Próximo dia"><svg viewBox="0 0 18 18"><path d="M7 3.5L12.5 9 7 14.5"/></svg></button>
+    </section>
+
+    <!-- CLIENTES -->
+    <section class="view" id="v-clientes" aria-label="Clientes" hidden>
+      <div class="cli-top">
+        <label class="busca lg"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5"/><path d="M12.5 12.5l4 4"/></svg><input id="cliBusca" type="search" placeholder="Buscar por nome ou telefone" autocomplete="off" maxlength="40"></label>
+        <div class="chips" id="cliFiltros" role="radiogroup" aria-label="Filtro">
+          <button class="chip is-on" data-f="todos" type="button">Todos</button>
+          <button class="chip" data-f="fieis" type="button">Fiéis</button>
+          <button class="chip" data-f="sumidos" type="button">Sumidos 30+ dias</button>
+          <button class="chip" data-f="novos" type="button">Novos</button>
+        </div>
       </div>
-      <div class="sumline ent" style="--k:2">
-        <span class="small" id="agSum"></span>
-        <button class="btn btn-ghost btn-sm" id="irHoje" type="button">Hoje</button>
+      <div class="cli-resumo" id="cliResumo"></div>
+      <div class="lg card cli-card"><div id="cliLista"></div></div>
+    </section>
+
+    <!-- PRODUTOS -->
+    <section class="view" id="v-produtos" aria-label="Produtos" hidden>
+      <div class="prod-hero lg">
+        <div class="prod-hero-3d" id="prodHero3d" aria-hidden="true"></div>
+        <div class="prod-hero-t">
+          <span class="eyebrow">Vitrine com IA</span>
+          <h2>Fotografe a pomada. A IA identifica, escreve a descrição, sugere o preço e monta o 3D.</h2>
+          <div class="prod-hero-b"><button class="btn btn-primary" type="button" data-acao="novo-prod"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3 6.5h3l1.5-2h5L14 6.5h3v10H3z"/><circle cx="10" cy="11" r="3"/></svg>Novo produto com IA</button>
+          <button class="btn btn-ghost" type="button" data-acao="novo-prod-manual">Cadastrar sem fotos</button></div>
+        </div>
       </div>
-      <ul class="list" id="agLista"></ul>
+      <div class="prod-stats" id="prodStats"></div>
+      <div class="prod-grid" id="prodGrid"></div>
     </section>
 
     <!-- FINANCEIRO -->
     <section class="view" id="v-fin" aria-label="Financeiro" hidden>
-      <div class="chips seg-chips ent" style="--k:0" id="periodos" role="radiogroup" aria-label="Período">
-        <button class="chip is-on" data-p="hoje" type="button" role="radio" aria-checked="true">Hoje</button>
-        <button class="chip" data-p="7" type="button" role="radio" aria-checked="false">7 dias</button>
-        <button class="chip" data-p="mes" type="button" role="radio" aria-checked="false">Mês</button>
+      <div class="fin-top">
+        <div class="chips seg-chips ent" style="--k:0" id="periodos" role="radiogroup" aria-label="Período">
+          <button class="chip is-on" data-p="hoje" type="button" role="radio" aria-checked="true">Hoje</button>
+          <button class="chip" data-p="7" type="button" role="radio" aria-checked="false">7 dias</button>
+          <button class="chip" data-p="mes" type="button" role="radio" aria-checked="false">Mês</button>
+        </div>
+        <button class="btn btn-ghost btn-sm" id="exportCsv" type="button"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 3v10M6 9l4 4 4-4M4 16.5h12"/></svg>Exportar CSV</button>
       </div>
-      <div class="saldo ent" style="--k:1"><span class="eyebrow" id="saldoLbl">Saldo de hoje</span><span class="num big" id="saldo">R$ 0</span></div>
-      <div class="g2r ent" style="--k:2">
-        <div class="gl rc" id="rcMargem"></div>
-        <div class="gl rc" id="rcComp"></div>
+      <div class="fin-grid">
+        <div class="fin-l">
+          <div class="saldo lg ent" style="--k:1"><span class="eyebrow" id="saldoLbl">Saldo de hoje</span><span class="num big" id="saldo">R$ 0</span></div>
+          <div class="g2r ent" style="--k:2">
+            <div class="lg rc" id="rcMargem"></div>
+            <div class="lg rc" id="rcComp"></div>
+          </div>
+          <div class="chart lg ent" style="--k:3">
+            <div class="chart-h"><span class="eyebrow">Faturado · 7 dias</span><span class="chart-v num" id="chartV" aria-live="polite"></span></div>
+            <div class="bars" id="bars" role="group" aria-label="Faturado por dia, últimos 7 dias"></div>
+          </div>
+          <div class="kv lg kv-card ent" style="--k:4" id="finKv"></div>
+        </div>
+        <div class="fin-r">
+          <div class="stack ent" style="--k:5"><button class="btn btn-primary btn-block" id="abrirAdd" type="button">
+            <svg viewBox="0 0 18 18" aria-hidden="true"><path d="M9 3v12M3 9h12"/></svg>Adicionar lançamento</button></div>
+          <div id="finLista"></div>
+        </div>
       </div>
-      <div class="chart gl ent" style="--k:3">
-        <div class="chart-h"><span class="eyebrow">Faturado · 7 dias</span><span class="chart-v num" id="chartV" aria-live="polite"></span></div>
-        <div class="bars" id="bars" role="group" aria-label="Faturado por dia, últimos 7 dias"></div>
-      </div>
-      <div class="kv gl kv-card ent" style="--k:4" id="finKv"></div>
-      <div class="stack ent" style="--k:5"><button class="btn btn-primary btn-block" id="abrirAdd" type="button">
-        <svg viewBox="0 0 18 18" aria-hidden="true"><path d="M9 3v12M3 9h12"/></svg>Adicionar lançamento</button></div>
-      <div id="finLista"></div>
     </section>
 
     <!-- AJUSTES -->
     <section class="view" id="v-aj" aria-label="Ajustes" hidden>
-      <div class="sec gl">
-        <div class="sec-h"><h2>Serviços</h2><span class="small muted">o cliente vê isto</span></div>
+      <div class="aj-grid">
+      <div class="sec lg">
+        <div class="sec-h"><h2>Serviços</h2><span class="small muted">toque no ícone para trocar</span></div>
         <div id="svcEd"></div>
         <div class="stack">
           <button class="btn btn-ghost btn-block" id="svcAdd" type="button">Adicionar serviço</button>
           <button class="btn btn-primary btn-block" id="svcSalvar" type="button">Salvar serviços</button>
         </div>
       </div>
-      <div class="sec gl">
+      <div class="aj-col">
+      <div class="sec lg">
         <div class="sec-h"><h2>Horário</h2><span class="small muted">abre · fecha</span></div>
         <div id="hrEd"></div>
         <div class="hr" id="hrAlmoco"></div>
         <div class="stack"><button class="btn btn-primary btn-block" id="hrSalvar" type="button">Salvar horário</button></div>
       </div>
-      <div class="sec gl">
+      <div class="sec lg">
         <div class="sec-h"><h2>Avisos</h2></div>
         <p class="note" id="notifSt" style="margin:0 0 4px"></p>
         <div class="stack">
@@ -137,12 +215,20 @@
           <button class="btn btn-ghost btn-block" id="testeBtn" type="button">Testar aviso</button>
         </div>
       </div>
-      <div class="sec gl">
+      <div class="sec lg">
+        <div class="sec-h"><h2>IA dos produtos</h2></div>
+        <p class="note" id="iaSt" style="margin:0 0 8px">A identificação usa a função /api/identificar-produto na Vercel.</p>
+        <label class="field"><span class="field-label">Token do painel (opcional)</span><input class="input" id="iaToken" type="password" autocomplete="off" maxlength="80" placeholder="Só se você definiu PAINEL_TOKEN"></label>
+        <div class="stack"><button class="btn btn-ghost btn-block" id="iaTestar" type="button">Testar conexão com a IA</button></div>
+      </div>
+      <div class="sec lg">
         <div class="stack">
           <button class="btn btn-ghost btn-block hidden" id="restaurarDemo" type="button">Restaurar dados da demonstração</button>
           <button class="btn btn-text btn-block" id="sair" type="button">Sair</button>
         </div>
         <p class="foot-mini" id="ajFoot"></p>
+      </div>
+      </div>
       </div>
     </section>
 
@@ -150,13 +236,7 @@
   </main>
 
   <nav class="bar nav" id="nav" aria-label="Seções">
-    <div class="tabs" role="tablist">
-      <button class="tab is-on" data-v="agenda" type="button" role="tab" aria-selected="true">
-        <svg viewBox="0 0 20 20" aria-hidden="true"><rect x="3" y="4" width="14" height="13" rx="2"/><path d="M3 8h14M7 2.5v3M13 2.5v3"/></svg><span>Agenda</span></button>
-      <button class="tab" data-v="fin" type="button" role="tab" aria-selected="false">
-        <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3 16.5h14M5.5 13.5v-4M10 13.5V5M14.5 13.5v-6"/></svg><span>Financeiro</span></button>
-      <button class="tab" data-v="aj" type="button" role="tab" aria-selected="false">
-        <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3 6h9M15 6h2M3 14h2M8 14h9"/><circle cx="13.5" cy="6" r="1.8"/><circle cx="6.5" cy="14" r="1.8"/></svg><span>Ajustes</span></button>
+    <div class="tabs" role="tablist"><button class="tab is-on" data-v="inicio" type="button" role="tab" aria-selected="true"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3 9.5L10 3.5l7 6V17a1 1 0 0 1-1 1h-4v-5H8v5H4a1 1 0 0 1-1-1z"/></svg><span>Início</span></button><button class="tab" data-v="agenda" type="button" role="tab" aria-selected="false"><svg viewBox="0 0 20 20" aria-hidden="true"><rect x="3" y="4" width="14" height="13" rx="2"/><path d="M3 8h14M7 2.5v3M13 2.5v3"/></svg><span>Agenda</span></button><button class="tab" data-v="clientes" type="button" role="tab" aria-selected="false"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="8" cy="7" r="3"/><path d="M2.5 17c.6-3 2.8-4.5 5.5-4.5s4.9 1.5 5.5 4.5"/><path d="M13 4.2a3 3 0 0 1 0 5.6M15 12.8c1.3.6 2.2 2 2.5 4.2"/></svg><span>Clientes</span></button><button class="tab" data-v="produtos" type="button" role="tab" aria-selected="false"><svg viewBox="0 0 20 20" aria-hidden="true"><rect x="3.5" y="8" width="13" height="9" rx="2"/><path d="M3.5 8.5c0-1.8 2.9-3 6.5-3s6.5 1.2 6.5 3M3.5 12h13"/></svg><span>Produtos</span></button><button class="tab" data-v="fin" type="button" role="tab" aria-selected="false"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3 16.5h14M5.5 13.5v-4M10 13.5V5M14.5 13.5v-6"/></svg><span>Caixa</span></button>
       <span class="tab-ind" aria-hidden="true"></span>
     </div>
   </nav>
@@ -186,6 +266,101 @@
     <button class="btn btn-primary btn-block" id="addSalvar" type="button">Lançar saída</button>
     <button class="btn btn-text btn-block" id="addCancelar" type="button">Cancelar</button>
   </div>
+</div>
+
+<!-- folha: novo agendamento (pelo painel) -->
+<div class="sheet glass" id="shAg" role="dialog" aria-modal="true" aria-labelledby="shAgT">
+  <div class="sheet-grab"></div>
+  <h2 id="shAgT">Novo agendamento</h2>
+  <label class="field"><span class="field-label">Cliente</span><input class="input" id="nAgNome" autocomplete="off" maxlength="60" placeholder="Nome" list="dlClientes"></label>
+  <datalist id="dlClientes"></datalist>
+  <label class="field"><span class="field-label">WhatsApp</span><input class="input num" id="nAgTel" inputmode="numeric" maxlength="20" placeholder="(00) 9 0000-0000"></label>
+  <span class="field-label">Serviço</span><div class="chips svc-chips" id="nAgSvc"></div>
+  <label class="field"><span class="field-label">Dia</span><input class="input" id="nAgData" type="date"></label>
+  <span class="field-label">Horário livre</span><div class="slots" id="nAgSlots"></div>
+  <p class="note hidden" id="nAgMsg" style="color:var(--danger)"></p>
+  <div class="sheet-actions">
+    <button class="btn btn-primary btn-block" id="nAgSalvar" type="button">Agendar</button>
+    <button class="btn btn-text btn-block" data-fechar type="button">Cancelar</button>
+  </div>
+</div>
+
+<!-- folha: produto (fotos -> IA -> revisar) -->
+<div class="sheet glass sheet-xl" id="shProd" role="dialog" aria-modal="true" aria-labelledby="shProdT">
+  <div class="sheet-grab"></div>
+  <div class="pw-head"><h2 id="shProdT">Novo produto</h2>
+    <ol class="pw-steps" id="pwSteps"><li class="is-on">Fotos</li><li>IA</li><li>Revisar</li></ol></div>
+  <!-- passo 1 -->
+  <div class="pw-p" id="pw1">
+    <p class="muted small" style="margin:0 0 12px">Coloque a pomada sobre uma folha branca, com boa luz. Frente e tampa são obrigatórias; os outros lados deixam o 3D perfeito.</p>
+    <div class="pw-fotos" id="pwFotos"></div>
+    <input type="file" id="pwFile" accept="image/*" capture="environment" hidden>
+    <input type="file" id="pwFiles" accept="image/*" multiple hidden>
+    <div class="sheet-actions">
+      <button class="btn btn-ghost btn-block" id="pwVarias" type="button">Escolher várias da galeria</button>
+      <button class="btn btn-primary btn-block" id="pwAnalisar" type="button" disabled>Identificar com IA</button>
+      <button class="btn btn-text btn-block" data-fechar type="button">Cancelar</button>
+    </div>
+  </div>
+  <!-- passo 2 -->
+  <div class="pw-p hidden" id="pw2">
+    <div class="scan lg"><div class="scan-img" id="scanImg"></div><span class="scan-linha"></span><span class="scan-grade"></span></div>
+    <ul class="scan-etapas" id="scanEtapas">
+      <li data-e="ler">Lendo o rótulo</li><li data-e="id">Identificando a marca e o tipo</li><li data-e="preco">Pesquisando a faixa de preço</li><li data-e="3d">Montando o modelo 3D</li>
+    </ul>
+  </div>
+  <!-- passo 3 -->
+  <div class="pw-p hidden" id="pw3">
+    <div class="pw-rev">
+      <div class="pw-rev-3d"><div class="pw-3d" id="pw3d"></div><p class="small muted pw-3d-dica">Arraste para girar</p><div class="ia-badge hidden" id="iaBadge"></div></div>
+      <div class="pw-form">
+        <p class="note hidden" id="pwAviso"></p>
+        <label class="field"><span class="field-label">Nome</span><input class="input" id="fpNome" maxlength="80"></label>
+        <div class="f2"><label class="field"><span class="field-label">Marca</span><input class="input" id="fpMarca" maxlength="40"></label>
+        <label class="field"><span class="field-label">Tipo</span><select class="input" id="fpCat"><option>Pomada</option><option>Cera</option><option>Argila</option><option>Pasta</option><option>Gel</option><option>Óleo</option><option>Balm</option><option>Pó</option><option>Spray</option><option>Shampoo</option><option>Outro</option></select></label></div>
+        <span class="field-label">Fixação</span><div class="fix" id="fpFix" role="radiogroup" aria-label="Fixação de 1 a 5"></div>
+        <span class="field-label">Brilho</span><div class="chips" id="fpBrilho"><button class="chip" type="button">Fosco</button><button class="chip" type="button">Baixo</button><button class="chip" type="button">Médio</button><button class="chip" type="button">Alto</button></div>
+        <div class="f3"><label class="field"><span class="field-label">Preço (R$)</span><input class="input num" id="fpPreco" inputmode="decimal" maxlength="9"></label>
+        <label class="field"><span class="field-label">Estoque</span><input class="input num" id="fpEst" inputmode="numeric" maxlength="5"></label>
+        <label class="field"><span class="field-label">Conteúdo</span><input class="input" id="fpCont" maxlength="20" placeholder="70 g"></label></div>
+        <p class="small muted hidden" id="fpFaixa"></p>
+        <label class="field"><span class="field-label">Descrição (o cliente vê)</span><textarea class="input ta" id="fpDesc" rows="3" maxlength="600"></textarea></label>
+        <label class="field"><span class="field-label">Indicado para</span><input class="input" id="fpInd" maxlength="120"></label>
+        <label class="field"><span class="field-label">Como usar</span><input class="input" id="fpUso" maxlength="300"></label>
+        <div class="hr hr-tg"><span class="hr-d">Mostrar no site</span><button class="tg" id="fpAtivo" role="switch" aria-checked="true" type="button" aria-label="Mostrar no site"></button></div>
+        <div class="hr hr-tg"><span class="hr-d">Destaque da vitrine</span><button class="tg" id="fpDest" role="switch" aria-checked="false" type="button" aria-label="Destaque"></button></div>
+      </div>
+    </div>
+    <p class="note hidden" id="pwMsg" style="color:var(--danger)"></p>
+    <div class="sheet-actions pw-acts">
+      <button class="btn btn-primary btn-block" id="pwSalvar" type="button">Salvar produto</button>
+      <button class="btn btn-ghost btn-block" id="pwRefazer" type="button">Trocar fotos</button>
+      <button class="btn btn-text btn-block danger hidden" id="pwExcluir" type="button">Excluir produto</button>
+    </div>
+  </div>
+</div>
+
+<!-- folha: vender produto -->
+<div class="sheet glass" id="shVenda" role="dialog" aria-modal="true" aria-labelledby="shVendaT">
+  <div class="sheet-grab"></div>
+  <div class="venda-top"><div class="venda-3d" id="venda3d"></div><div><p class="eyebrow">Vender</p><h2 id="shVendaT"></h2><p class="small muted" id="vendaEst"></p></div></div>
+  <div class="qtd"><button class="ibtn" id="vMenos" type="button" aria-label="Menos">−</button><span class="num" id="vQtd">1</span><button class="ibtn" id="vMais" type="button" aria-label="Mais">+</button></div>
+  <span class="field-label">Pagamento</span>
+  <div class="chips" id="vForma"><button class="chip is-on" type="button">Pix</button><button class="chip" type="button">Dinheiro</button><button class="chip" type="button">Cartão</button></div>
+  <div class="kv"><div class="kv-row"><span class="kv-k">Total</span><span class="kv-v num" id="vTotal"></span></div></div>
+  <div class="sheet-actions">
+    <button class="btn btn-primary btn-block" id="vConfirmar" type="button">Registrar venda</button>
+    <button class="btn btn-text btn-block" data-fechar type="button">Cancelar</button>
+  </div>
+</div>
+
+<!-- folha: escolher ícone do serviço -->
+<div class="sheet glass" id="shIco" role="dialog" aria-modal="true" aria-labelledby="shIcoT">
+  <div class="sheet-grab"></div>
+  <h2 id="shIcoT">Ícone do serviço</h2>
+  <p class="small muted" id="icoSug" style="margin:6px 0 12px"></p>
+  <div class="ico-grade" id="icoGrade"></div>
+  <div class="sheet-actions"><button class="btn btn-text btn-block" data-fechar type="button">Fechar</button></div>
 </div>
 
 <div class="toast glass" id="toast" role="status" aria-live="polite"></div>

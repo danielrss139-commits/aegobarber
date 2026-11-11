@@ -3,9 +3,10 @@
    SÓ guarda os arquivos do próprio site listados em SHELL. Nunca intercepta
    nem guarda Firestore, Auth, SDK do Firebase (gstatic) ou qualquer outro domínio.
    Ao mudar arquivos do site, aumente o número em CACHE para os celulares pegarem a versão nova. */
-var CACHE = 'bt-shell-v6';
+var CACHE = 'bt-shell-v7';
 var SHELL = [
   './', 'index.html', 'agendar.html', 'painel.html', 'style.css', 'manifest.json',
+  'aego-pro.css', 'icones.js', 'produto3d.js', 'painel-pro.js', 'loja-produtos.js',
   'loja.config.js', 'boot.js', 'comum.js', 'db-firebase.js', 'db-demo.js', 'firebase-config.js', 'agendar.js', 'avaliacoes.js', 'painel.js',
   'fonts/hanken-grotesk.woff2',
   'icons/icon-192.png', 'icons/icon-512.png', 'icons/icon-maskable-512.png', 'icons/favicon-32.png', 'icons/apple-touch-icon.png'

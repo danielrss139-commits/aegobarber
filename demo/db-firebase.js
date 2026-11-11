@@ -103,8 +103,32 @@
   if (root.JC && root.JC.loja) {
     CONFIG_PADRAO = root.JC.loja.config;
     if (root.JC.loja.servicos.length) SERVICOS_PADRAO = root.JC.loja.servicos.map(function (s) {
-      return { id: s.id, nome: s.nome, preco: s.preco, duracao: s.duracao, ordem: s.ordem, ativo: true };
+      return { id: s.id, nome: s.nome, preco: s.preco, duracao: s.duracao, ordem: s.ordem, ativo: true, icone: s.icone || '', descricao: s.descricao || '' };
     });
+  }
+
+  /* ---------- produto: só campos conhecidos, tamanhos limitados (Firestore: doc até 1 MB) ---------- */
+  function txtP(v, n) { return String(v == null ? '' : v).trim().slice(0, n); }
+  function imgOk(u) { return typeof u === 'string' && u.length < 260000 && (/^data:image\/(webp|jpeg|png);base64,/.test(u) || /^[\w\-./]+\.(webp|jpe?g|png)$/i.test(u)); }
+  function limparProduto(x) {
+    x = x || {};
+    var fotos = {}, m = x.modelo3d || null;
+    ['frente', 'direita', 'verso', 'esquerda', 'topo', 'base'].forEach(function (k) { if (x.fotos && imgOk(x.fotos[k])) fotos[k] = x.fotos[k]; });
+    var p = {
+      nome: txtP(x.nome, 80) || 'Produto', marca: txtP(x.marca, 40), categoria: txtP(x.categoria, 30), conteudo: txtP(x.conteudo, 20),
+      fixacao: Math.max(0, Math.min(5, parseInt(x.fixacao, 10) || 0)), brilho: txtP(x.brilho, 20),
+      descricao: txtP(x.descricao, 600), comoUsar: txtP(x.comoUsar, 300), indicacao: txtP(x.indicacao, 120),
+      preco: Math.max(0, Math.min(100000, Math.round((Number(x.preco) || 0) * 100) / 100)),
+      estoque: Math.max(0, Math.min(99999, parseInt(x.estoque, 10) || 0)), estoqueMin: Math.max(0, Math.min(999, parseInt(x.estoqueMin, 10) || 0)),
+      ativo: x.ativo !== false, destaque: !!x.destaque, vendidos: Math.max(0, parseInt(x.vendidos, 10) || 0),
+      fotos: fotos,
+      modelo3d: m && imgOk(m.lateral) ? { lateral: m.lateral, topo: imgOk(m.topo) ? m.topo : '', capa: imgOk(m.capa) ? m.capa : '',
+        proporcao: Math.max(.18, Math.min(3.2, Number(m.proporcao) || .5)), cor: /^#[0-9a-f]{6}$/i.test(m.cor || '') ? m.cor : '#222222', versao: 1 } : null,
+      ia: x.ia && typeof x.ia === 'object' ? { confianca: Math.max(0, Math.min(1, Number(x.ia.confianca) || 0)), modelo: txtP(x.ia.modelo, 40), em: Number(x.ia.em) || Date.now() } : null
+    };
+    if (x.id) p.id = txtP(x.id, 60);
+    if (x.ordem != null) p.ordem = Number(x.ordem) || 0;
+    return p;
   }
 
   function erro(code, msg, causa) { var e = new Error(msg); e.code = code; if (causa) e.causa = causa; return e; }
@@ -202,6 +226,7 @@
         return ctx().then(function (c) {
           vigiar('pub:servicos', c.F.collection(c.db, 'servicos'), c);
           vigiar('pub:config', c.F.doc(c.db, 'config', 'loja'), c);
+          vigiar('pub:produtos', c.F.collection(c.db, 'produtos'), c);
           if (c.auth && c.A) {
             c.A.onAuthStateChanged(c.auth, function (user) {
               function avisar(info) { ouvintesAuth.forEach(function (f) { try { f(info); } catch (e) { console.error(e); } }); }
@@ -269,7 +294,8 @@
             lista.forEach(function (s, i) {
               manter[s.id] = 1;
               b.set(c.F.doc(c.db, 'servicos', s.id), { nome: String(s.nome).slice(0, 60), preco: Number(s.preco),
-                duracao: parseInt(s.duracao, 10), ordem: s.ordem != null ? s.ordem : i + 1, ativo: s.ativo !== false });
+                duracao: parseInt(s.duracao, 10), ordem: s.ordem != null ? s.ordem : i + 1, ativo: s.ativo !== false,
+                icone: String(s.icone || '').slice(0, 30), descricao: String(s.descricao || '').slice(0, 90) });
             });
             qs.docs.forEach(function (d) { if (!manter[d.id]) b.delete(d.ref); });
             return b.commit();
@@ -440,6 +466,42 @@
       saidas: function (de, ate) { return lancamentos('saidas', de, ate); },
       addCorte: function (x) { return addLanc('cortes', x); },
       addSaida: function (x) { return addLanc('saidas', x); },
+      /* ---------- produtos (público lê; só o barbeiro grava) ---------- */
+      produtos: function () {
+        return ctx().then(function (c) { return c.F.getDocs(c.F.collection(c.db, 'produtos')); }).then(function (qs) {
+          return qs.docs.map(function (s) { return Object.assign({ ativo: true, ordem: 0 }, s.data(), { id: s.id }); })
+            .sort(function (a, b) { return (a.ordem || 0) - (b.ordem || 0); });
+        });
+      },
+      salvarProduto: function (x) {
+        return ctx().then(function (c) {
+          var p = limparProduto(x), ref = p.id ? c.F.doc(c.db, 'produtos', p.id) : c.F.doc(c.F.collection(c.db, 'produtos'));
+          var id = ref.id; delete p.id;
+          if (!x.id) { p.criadoEm = Date.now(); p.ordem = Date.now(); }
+          return c.F.setDoc(ref, p, { merge: true }).then(function () { return Object.assign({}, p, { id: id }); });
+        });
+      },
+      removerProduto: function (id) { return ctx().then(function (c) { return c.F.deleteDoc(c.F.doc(c.db, 'produtos', id)); }); },
+      // venda: transação que baixa o estoque e cria a entrada no caixa (categoria 'produto')
+      venderProduto: function (id, qtd, forma) {
+        qtd = Math.max(1, parseInt(qtd, 10) || 1);
+        return ctx().then(function (c) {
+          var pRef = c.F.doc(c.db, 'produtos', id), lRef = c.F.doc(c.F.collection(c.db, 'cortes')), agora = new Date();
+          return c.F.runTransaction(c.db, function (tx) {
+            return tx.get(pRef).then(function (s) {
+              if (!s.exists()) throw erro('nao-encontrado', 'Produto não encontrado.');
+              var p = s.data();
+              if ((p.estoque || 0) < qtd) throw erro('sem-estoque', 'Sem estoque suficiente.');
+              tx.update(pRef, { estoque: p.estoque - qtd, vendidos: (p.vendidos || 0) + qtd });
+              var reg = { agendamentoId: null, data: hoje(), hora: hhmm(agora.getHours() * 60 + agora.getMinutes()), categoria: 'produto', produtoId: id, qtd: qtd, forma: String(forma || '').slice(0, 20),
+                descricao: (p.nome + (qtd > 1 ? ' ×' + qtd : '') + ' · venda').slice(0, 120), valor: Math.round(p.preco * qtd * 100) / 100, criadoEm: c.F.serverTimestamp() };
+              tx.set(lRef, reg);
+              return Object.assign({}, reg, { id: lRef.id, criadoEm: Date.now() });
+            });
+          });
+        });
+      },
+
       removerLancamento: function (tipo, id) {
         if (tipo !== 'cortes' && tipo !== 'saidas') return Promise.reject(erro('invalido', 'tipo inválido'));
         return ctx().then(function (c) { return c.F.deleteDoc(c.F.doc(c.db, tipo, id)); });
@@ -456,6 +518,7 @@
         var ref = c.F.doc(c.F.collection(c.db, col));
         var reg = { agendamentoId: x.agendamentoId || null, data: x.data, hora: x.hora || hhmm(0),
           descricao: String(x.descricao || '').slice(0, 120), valor: Number(x.valor) || 0, criadoEm: c.F.serverTimestamp() };
+        if (x.categoria) { reg.categoria = String(x.categoria).slice(0, 20); reg.produtoId = x.produtoId || null; reg.qtd = x.qtd || 1; reg.forma = String(x.forma || '').slice(0, 20); }
         return c.F.setDoc(ref, reg).then(function () { return Object.assign({}, reg, { id: ref.id, criadoEm: Date.now() }); });
       });
     }
@@ -504,7 +567,7 @@
   if (typeof module !== 'undefined' && module.exports) {
     module.exports = { criarDB: criarDB, util: { blocos: blocos, slotId: slotId, horariosLivres: horariosLivres }, CONFIG_PADRAO: CONFIG_PADRAO, SERVICOS_PADRAO: SERVICOS_PADRAO };
   } else {
-    root.DBBase = { criarDB: criarDB, CONFIG_PADRAO: CONFIG_PADRAO, SERVICOS_PADRAO: SERVICOS_PADRAO };
+    root.DBBase = { criarDB: criarDB, CONFIG_PADRAO: CONFIG_PADRAO, SERVICOS_PADRAO: SERVICOS_PADRAO, limparProduto: limparProduto };
     if (!(root.JC && root.JC.loja && root.JC.loja.demo)) root.DB = criarDB(carregarCDN);   // modo demonstração: db-demo.js
   }
 })(typeof window !== 'undefined' ? window : globalThis);

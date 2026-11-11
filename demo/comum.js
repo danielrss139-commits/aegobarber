@@ -144,21 +144,21 @@
     infantil: '<circle cx="12" cy="12" r="8.5"/><path d="M8.8 14c1.8 1.7 4.6 1.7 6.4 0M9 9.8h.01M15 9.8h.01"/>',
     estrela: '<path d="M12 3.5l2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 16.9l-5.2 2.7 1-5.8-4.3-4.1 5.9-.9z"/>'
   };
+  // Ordem: ícone escolhido no painel (s.icone) > loja.config.js > palavra-chave do nome > estrela.
+  // Antes só olhava o loja.config.js: serviço criado no painel ficava sem ícone próprio.
+  var PK = w.AEGO_ICONES;
   function iconeDe(s) {
+    s = s || {};
+    if (PK && s.icone && PK.existe(s.icone)) return s.icone;
     var c = (loja.servicos.filter(function (x) { return x.id === s.id; })[0] || {}).icone;
-    if (IC[c]) return c;
-    var n = String(s.nome || '').toLowerCase();
-    if (/\+|combo/.test(n)) return 'combo';
-    if (/barba/.test(n)) return 'barba';
-    if (/sobrancelha/.test(n)) return 'sobrancelha';
-    if (/pezinho|m[aá]quina|acabamento/.test(n)) return 'maquina';
-    if (/infantil|crian/.test(n)) return 'infantil';
-    if (/navalha/.test(n)) return 'navalha';
-    if (/corte|cabelo|degrad/.test(n)) return 'tesoura';
-    return 'estrela';
+    if (PK && c && PK.existe(c)) return c;
+    if (PK) return PK.sugerir(s.nome);
+    return IC[c] ? c : 'estrela';
   }
   function icone(s, cls) {
-    return '<svg class="ico ' + (cls || '') + '" viewBox="0 0 24 24" aria-hidden="true">' + IC[iconeDe(s)] + '</svg>';
+    var id = iconeDe(s);
+    if (PK) return PK.svg(id, cls);
+    return '<svg class="ico ' + (cls || '') + '" viewBox="0 0 24 24" aria-hidden="true">' + (IC[id] || IC.estrela) + '</svg>';
   }
   function extraServico(s) {   // descrição e foto do loja.config.js (pelo id ou nome)
     var c = loja.servicos.filter(function (x) { return x.id === s.id; })[0] ||
@@ -333,5 +333,5 @@
 
   w.JC = { loja: loja, configOk: configOk, esc: esc, msgErro: msgErro, semRede: semRede, pendente: pendente, emulador: usarEmu,
     reduz: reduz, lite: lite, marca: marca, monograma: monograma, icone: icone, extraServico: extraServico,
-    aplicarHead: aplicarHead, preencher: preencher, abertura: abertura, contar: contar, anel: anel, slug: slug };
+    aplicarHead: aplicarHead, iconeDe: iconeDe, preencher: preencher, abertura: abertura, contar: contar, anel: anel, slug: slug };
 })(window);

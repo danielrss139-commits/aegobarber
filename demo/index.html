@@ -2,7 +2,7 @@
 <html lang="pt-BR" data-intro="cliente">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://www.gstatic.com/firebasejs/; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self' https://firestore.googleapis.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://content-firebaseappcheck.googleapis.com; manifest-src 'self'; worker-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://www.gstatic.com/firebasejs/; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self' https://firestore.googleapis.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://content-firebaseappcheck.googleapis.com; manifest-src 'self'; worker-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'none'">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0b0b0b">
@@ -16,14 +16,18 @@
 <link rel="preconnect" href="https://firestore.googleapis.com" crossorigin>
 <link rel="preload" href="fonts/hanken-grotesk.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="aego-pro.css">
 <script src="loja.config.js"></script>
 <script src="boot.js"></script>
 <script src="firebase-config.js" defer></script>
+<script src="icones.js" defer></script>
 <script src="comum.js" defer></script>
 <script src="db-firebase.js" defer></script>
 <script src="db-demo.js" defer></script>
 <script src="agendar.js" defer></script>
 <script src="avaliacoes.js" defer></script>
+<script src="produto3d.js" defer></script>
+<script src="loja-produtos.js" defer></script>
 </head>
 <body class="pg-cliente">
 <div id="intro" class="abertura" aria-hidden="true" data-sub="Agendamento online"></div>
@@ -77,6 +81,24 @@
       <input class="input num" id="zap" type="tel" inputmode="numeric" autocomplete="tel-national" placeholder="(00) 9 0000-0000" maxlength="20">
       <span class="field-hint">Só para a barbearia confirmar com você.</span>
     </label>
+  </section>
+
+  <!-- VITRINE: pomadas e produtos da casa (cadastrados no painel com IA) -->
+  <section class="vitrine" id="vitrine" aria-labelledby="vtT" hidden>
+    <div class="vt-pin" id="vtPin">
+      <div class="vt-stage">
+        <div class="vt-big" id="vtBig" aria-hidden="true"></div>
+        <div class="vt-titulo"><span class="eyebrow">Leve para casa</span><h2 id="vtT">Produtos da casa</h2></div>
+        <div class="vt-3d" id="vt3d" aria-hidden="true"></div>
+        <p class="vt-dica" id="vtDica">Role para girar</p>
+        <div class="vt-prog" id="vtProg" aria-hidden="true"></div>
+        <div class="vt-info lg" id="vtInfo"></div>
+      </div>
+    </div>
+    <div class="vt-stack">
+      <div class="vt-stack-h"><span class="eyebrow">Usamos e recomendamos</span><h2>Para o corte<br>durar até a próxima</h2></div>
+      <div id="vtCards"></div>
+    </div>
   </section>
 
   <section class="step gl av-sec" id="avaliacoes" aria-labelledby="tav">
@@ -140,6 +162,17 @@
   <div class="cal-grade" id="calGrade" role="group" aria-labelledby="calT"></div>
   <p class="cal-leg small muted"><span class="cal-leg-hoje" aria-hidden="true"></span>hoje · dias apagados estão fechados</p>
   <button class="btn btn-text btn-block" id="calFechar" type="button">Fechar</button>
+</div>
+
+<!-- folha do produto (3D para girar + reservar) -->
+<div class="scrim" id="pdScrim"></div>
+<div class="sheet glass" id="pdSheet" role="dialog" aria-modal="true" aria-labelledby="pdT" aria-hidden="true">
+  <div class="sheet-grab"></div>
+  <div id="pdBody"></div>
+  <div class="sheet-actions">
+    <a class="btn btn-primary btn-block" id="pdZap" href="#" target="_blank" rel="noopener noreferrer">Reservar pelo WhatsApp</a>
+    <button class="btn btn-text btn-block" id="pdFechar" type="button">Fechar</button>
+  </div>
 </div>
 
 <div class="toast glass" id="toast" role="status" aria-live="polite"></div>

@@ -17,7 +17,7 @@
   $('ajFoot').textContent = LJ.nome + (LJ.endereco ? ' · ' + LJ.endereco : '');
   var K_VISTOS = 'jcp_vistos';
 
-  var st = { view: 'agenda', dia: U.hoje(), periodo: 'hoje', modo: 'saida', svcSel: null,
+  var st = { view: 'inicio', dia: U.hoje(), periodo: 'hoje', modo: 'saida', svcSel: null,
     servicos: [], cfg: null, vistos: null, novos: {}, flash: {}, just: {}, dir: 0, lock: false, pend: false,
     autorizado: false, ocupado: {} };
 
@@ -107,7 +107,7 @@
     if (!reduz()) { app.classList.add('is-entering'); clearTimeout(entT); entT = setTimeout(function () { app.classList.remove('is-entering'); }, 1900); }
     void app.offsetWidth;
     requestAnimationFrame(function () { $('nav').classList.add('is-on'); moverInd(document.querySelector('#nav .tabs')); });
-    st.entrada = true; iniciarVistos(); renderTudo(true);
+    st.entrada = true; mostrarView(st.view); marcarNav(st.view); iniciarVistos(); renderTudo(true);
   }
   // só chamado quando o Firebase confirmou: logado E barbeiro
   // 1ª configuração: banco sem serviços e/ou sem config/loja -> cria o padrão (nunca sobrescreve)
@@ -145,15 +145,16 @@
   // apaga tudo que estava na tela (dados do barbeiro não ficam no DOM depois de sair)
   function limparTela() {
     st.autorizado = false; st.vistos = null; st.novos = {}; st.flash = {}; st.just = {}; st.ocupado = {};
-    st.view = 'agenda'; st.dia = U.hoje(); st.periodo = 'hoje';
+    st.view = 'inicio'; st.dia = U.hoje(); st.periodo = 'hoje';
     ['agLista', 'finLista', 'finKv', 'bars', 'svcEd', 'hrEd', 'hrAlmoco', 'cSvc', 'ringOcup', 'rcMargem', 'rcComp'].forEach(function (id) { $(id).innerHTML = ''; });
     $('ringOcup').dataset.k = ''; $('rcMargem').dataset.k = '';
     ['hsH', 'hsA'].forEach(function (id) { $(id).textContent = '0'; $(id)._v = 0; });
     $('hsP').textContent = 'R$ 0'; $('hsP')._v = 0; $('saldo').textContent = 'R$ 0'; $('saldo')._v = 0;
     $('agSum').textContent = ''; $('chartV').textContent = '';
-    fecharSheet();
-    ['agenda', 'fin', 'aj'].forEach(function (x) { $('v-' + x).hidden = x !== 'agenda'; });
-    document.querySelectorAll('#nav .tab').forEach(function (t) { var on = t.dataset.v === 'agenda'; t.classList.toggle('is-on', on); t.setAttribute('aria-selected', on); });
+    fecharSheet(); fecharFolhas();
+    ORDEM.forEach(function (x) { $('v-' + x).hidden = x !== 'inicio'; });
+    marcarNav('inicio');
+    if (PAINEL.limpar) PAINEL.limpar();
   }
 
   $('loginForm').addEventListener('submit', function (e) {
@@ -191,41 +192,68 @@
   });
   $('email').addEventListener('input', function () { $('f-email').classList.remove('is-error'); });
   $('senha').addEventListener('input', function () { $('f-senha').classList.remove('is-error'); });
-  $('sair').addEventListener('click', function () {
+  document.querySelectorAll('#sair, [data-sair]').forEach(function (bt) { bt.addEventListener('click', sairAgora); });
+  function sairAgora() {
     var b = this; b.disabled = true;
     DB.sair().catch(function () {}).then(function () {
       b.disabled = false; limparTela(); window.scrollTo(0, 0); mostrarLogin();
     });
-  });
+  }
 
-  /* ---------- navegação ---------- */
-  var ORDEM = ['agenda', 'fin', 'aj'], navTok = 0;
+  /* ---------- navegação (menu lateral no computador, barra inferior no celular) ---------- */
+  var ORDEM = ['inicio', 'agenda', 'clientes', 'produtos', 'fin', 'aj'], navTok = 0;
+  var TITULOS = { inicio: 'Visão geral', agenda: 'Agenda', clientes: 'Clientes', produtos: 'Produtos', fin: 'Financeiro', aj: 'Ajustes' };
   function mostrarView(v) { ORDEM.forEach(function (x) { $('v-' + x).hidden = x !== v; }); }
-  ligarTabs(document.querySelector('#nav .tabs'), 'v', function (v) {
+  function marcarNav(v) {
+    document.querySelectorAll('#nav .tab, #side .side-i').forEach(function (t) { var on = t.dataset.v === v; t.classList.toggle('is-on', on); if (t.classList.contains('tab')) t.setAttribute('aria-selected', on); });
+    document.body.dataset.view = v;
+  }
+  function irPara(v) {
+    if (ORDEM.indexOf(v) < 0) return;
+    marcarNav(v);
     if (v === st.view) return;
     var dir = ORDEM.indexOf(v) > ORDEM.indexOf(st.view) ? 1 : -1, velha = $('v-' + st.view), tok = ++navTok;
     st.view = v;
     function entrar() {
       if (tok !== navTok) return;
       mostrarView(v); window.scrollTo(0, 0); renderTudo(true);
-      if (!reduz()) $('v-' + v).animate([{ opacity: 0, transform: 'translateX(' + (dir * 36) + 'px)' }, { opacity: 1, transform: 'none' }], { duration: 380, easing: EASE });
+      if (!reduz()) $('v-' + v).animate([{ opacity: 0, transform: 'translateY(' + 14 + 'px) scale(.985)', filter: 'blur(6px)' }, { opacity: 1, transform: 'none', filter: 'blur(0)' }], { duration: 460, easing: EASE });
     }
     if (reduz() || velha.hidden) return entrar();
-    var sai = velha.animate([{ opacity: 1, transform: 'none' }, { opacity: 0, transform: 'translateX(' + (-dir * 28) + 'px)' }], { duration: 150, easing: 'cubic-bezier(.4,0,1,1)', fill: 'forwards' });
+    var sai = velha.animate([{ opacity: 1, transform: 'none' }, { opacity: 0, transform: 'translateX(' + (-dir * 18) + 'px)', filter: 'blur(4px)' }], { duration: 150, easing: 'cubic-bezier(.4,0,1,1)', fill: 'forwards' });
     sai.onfinish = function () { entrar(); sai.cancel(); };
+  }
+  document.addEventListener('click', function (e) {
+    var b = e.target.closest('[data-v]'); if (!b || !st.autorizado || b.closest('.bars')) return;
+    if (b.matches('.tab, .side-i, .top-aj, .btn, .card-h *, .kpi, li')) { e.preventDefault(); irPara(b.dataset.v); }
   });
+
+  /* ---------- folhas (sheets) genéricas ---------- */
+  function abrirFolha(id) {
+    fecharFolhas(true);
+    $('scrim').classList.add('is-on'); $(id).classList.add('is-on'); document.body.classList.add('com-folha');
+  }
+  function fecharFolhas(semScrim) {
+    document.querySelectorAll('.sheet.is-on').forEach(function (s) { if (s.id !== 'sheet' && s.id !== 'cal') { s.classList.remove('is-on'); s.dispatchEvent(new Event('fechou')); } });
+    if (!semScrim) { $('scrim').classList.remove('is-on'); document.body.classList.remove('com-folha'); }
+  }
+  document.addEventListener('click', function (e) { if (e.target.closest('[data-fechar]')) { fecharFolhas(); fecharSheet(); } });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') { fecharFolhas(); fecharSheet(); } });
 
   function renderTop() {
     var d = new Date();
     $('topDate').innerHTML = esc(U.DIAS3[d.getDay()]) + '<b>' + d.getDate() + ' ' + U.MESES3[d.getMonth()] + '</b>';
-    var h = d.getHours(); $('topG').textContent = h < 5 ? 'Boa noite' : h < 12 ? 'Bom dia' : h < 18 ? 'Boa tarde' : 'Boa noite';
+    var h = d.getHours(); $('topG').textContent = (h < 5 ? 'Boa noite' : h < 12 ? 'Bom dia' : h < 18 ? 'Boa tarde' : 'Boa noite') + ' · ' + LJ.nome;
+    $('topN').textContent = TITULOS[st.view] || '';
   }
   function renderTudo(animar) {
     if (animar) st.animar = true;
     renderTop();
-    if (st.view === 'agenda') renderAgenda();
+    if (st.view === 'agenda') { renderAgenda(); if (PAINEL.semana) PAINEL.semana(); }
     else if (st.view === 'fin') renderFin();
-    else renderAjustes();
+    else if (st.view === 'aj') renderAjustes();
+    else if (PAINEL.views[st.view]) PAINEL.views[st.view](!!animar);
+    if (PAINEL.sempre) PAINEL.sempre();
   }
 
   /* ---------- AGENDA ---------- */
@@ -460,12 +488,13 @@
       renderChart(r[0].filter(function (c) { return c.data >= d7; }));
       $('finKv').innerHTML =
         '<div class="kv-row"><span class="kv-k">Faturado</span><span class="kv-v num" id="kvFat"></span></div>' +
-        '<div class="kv-row"><span class="kv-k">Cortes</span><span class="kv-v num" id="kvCor"></span></div>' +
+        '<div class="kv-row"><span class="kv-k">Atendimentos</span><span class="kv-v num" id="kvCor"></span></div>' +
+        '<div class="kv-row"><span class="kv-k">Produtos vendidos</span><span class="kv-v num">' + U.brlCurto(cortes.filter(function (c) { return c.categoria === 'produto'; }).reduce(function (s2, c) { return s2 + Number(c.valor || 0); }, 0)) + '</span></div>' +
         '<div class="kv-row"><span class="kv-k">Saídas</span><span class="kv-v num">' + (sai ? '− ' : '') + U.brlCurto(sai) + '</span></div>';
       var kf = $('kvFat'), kc = $('kvCor');
       kf._v = st.kvFat; kc._v = st.kvCor;
-      contar(kf, fat, U.brlCurto, anim ? 0 : null); contar(kc, cortes.length, String, anim ? 0 : null);
-      st.kvFat = fat; st.kvCor = cortes.length;
+      contar(kf, fat, U.brlCurto, anim ? 0 : null); var nAt = cortes.filter(function (c) { return c.categoria !== 'produto'; }).length; contar(kc, nAt, String, anim ? 0 : null);
+      st.kvFat = fat; st.kvCor = nAt;
       var itens = cortes.map(function (c) { return { t: 'cortes', x: c }; }).concat(saidas.map(function (s) { return { t: 'saidas', x: s }; }));
       if (!itens.length) { $('finLista').innerHTML = '<div class="grp' + (anim ? ' row-in' : '') + '"><div class="empty"><strong>Nada lançado</strong>Marque um atendimento na Agenda ou use Adicionar.</div></div>'; return; }
       var dias = {}, n = 0;
@@ -479,7 +508,7 @@
           l.map(function (it) {
             var s = it.t === 'saidas';
             return '<li class="row lanc' + (s ? ' is-saida' : '') + ri() + '><span class="lanc-h">' + esc(it.x.hora || '') + '</span>' +
-              '<div class="row-main"><div class="row-title">' + esc(it.x.descricao) + '</div>' + (s ? '<div class="row-sub">Saída</div>' : '') + '</div>' +
+              '<div class="row-main"><div class="row-title">' + esc(it.x.descricao) + '</div>' + (s ? '<div class="row-sub">Saída</div>' : it.x.categoria === 'produto' ? '<div class="row-sub">Produto' + (it.x.forma ? ' · ' + esc(it.x.forma) : '') + '</div>' : '') + '</div>' +
               '<span class="row-end">' + (s ? '− ' : '') + esc(U.brlCurto(it.x.valor)) + '</span></li>';
           }).join('') + '</ul></div>';
       }).join('');
@@ -522,7 +551,7 @@
   }
   function fecharSheet() { $('scrim').classList.remove('is-on'); $('sheet').classList.remove('is-on'); }
   $('abrirAdd').addEventListener('click', abrirSheet);
-  $('scrim').addEventListener('click', fecharSheet);
+  $('scrim').addEventListener('click', function () { fecharSheet(); fecharFolhas(); });
   $('addCancelar').addEventListener('click', fecharSheet);
   $('addSalvar').addEventListener('click', function () {
     var msg = $('addMsg'), base = { data: U.hoje(), hora: agoraHHMM() }, p;
@@ -557,7 +586,9 @@
     }).catch(falhaLeitura);
   }
   function svcLinha(s) {
-    return '<div class="svc-ed" data-id="' + esc(s.id) + '">' +
+    var ico = s.icone || (window.AEGO_ICONES ? AEGO_ICONES.sugerir(s.nome) : '');
+    return '<div class="svc-ed" data-id="' + esc(s.id) + '" data-icone="' + esc(s.icone || '') + '" data-desc="' + esc(s.descricao || '') + '">' +
+      '<button class="svc-ico" type="button" data-ico aria-label="Trocar ícone de ' + esc(s.nome || 'serviço') + '">' + JC.icone({ id: s.id, nome: s.nome, icone: ico }) + '</button>' +
       '<label class="lbl-nome"><span class="field-label">Serviço</span><input class="input" data-k="nome" value="' + esc(s.nome) + '" placeholder="Nome" maxlength="60"></label>' +
       '<label class="lbl-preco"><span class="field-label">R$</span><input class="input" data-k="preco" inputmode="decimal" maxlength="9" value="' + esc(String(s.preco).replace('.', ',')) + '"></label>' +
       '<label><span class="field-label">Min</span><input class="input" data-k="duracao" inputmode="numeric" maxlength="3" value="' + esc(s.duracao) + '"></label>' +
@@ -575,7 +606,8 @@
       var g = function (k) { return el.querySelector('[data-k="' + k + '"]').value; };
       var nome = g('nome').trim(), preco = parseValor(g('preco')), dur = parseInt(g('duracao'), 10);
       if (!nome || nome.length > 60 || !(preco >= 0) || preco > 100000 || !(dur >= 5) || dur > 240) { ok = false; el.querySelector('.input').closest('label').classList.add('is-error'); return; }
-      out.push({ id: el.dataset.id, nome: nome, preco: preco, duracao: dur, ordem: i + 1, ativo: true });
+      out.push({ id: el.dataset.id, nome: nome, preco: preco, duracao: dur, ordem: i + 1, ativo: true,
+        icone: el.dataset.icone || (window.AEGO_ICONES ? AEGO_ICONES.sugerir(nome) : ''), descricao: el.dataset.desc || '' });
     });
     if (!ok) return toast('Confira nome, preço e minutos (de 5 a 240).');
     if (!out.length) return toast('Deixe pelo menos um serviço.');
@@ -708,12 +740,19 @@
     }).catch(falhaLeitura);
   }
 
+  /* ---------- ponte com painel-pro.js (Início, Clientes, Produtos, ícones) ---------- */
+  var PAINEL = window.PAINEL = window.PAINEL || {};
+  PAINEL.views = PAINEL.views || {};
+  Object.assign(PAINEL, { st: st, toast: toast, esc: esc, irPara: irPara, renderTudo: renderTudo, falhaLeitura: falhaLeitura,
+    zapLink: zapLink, parseValor: parseValor, abrirFolha: abrirFolha, fecharFolhas: fecharFolhas, reduz: reduz, contar: contar,
+    diaCurto: diaCurto, cap: cap, minAbertos: minAbertos, renderAgenda: renderAgenda, agoraHHMM: agoraHHMM });
+
   /* ---------- início ---------- */
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', function () { navigator.serviceWorker.register('sw.js').catch(function () {}); });
   }
   setInterval(function () {   // move a linha do "agora" e o "Próximo"
-    if (st.autorizado && !document.hidden && st.view === 'agenda' && st.dia === U.hoje()) renderAgenda();
+    if (st.autorizado && !document.hidden && (st.view === 'agenda' && st.dia === U.hoje() || st.view === 'inicio')) renderTudo();
   }, 60000);
   window.addEventListener('resize', function () { document.querySelectorAll('.tabs').forEach(moverInd); });
   document.addEventListener('visibilitychange', function () { if (!document.hidden && st.autorizado) { checarNovos(); renderTudo(); } });
@@ -737,7 +776,7 @@
   DB.iniciar({ painel: true }).then(function () {
     DB.aoMudar(function () {
       if (!st.autorizado) return;
-      checarNovos().then(function () { if (st.view !== 'aj') renderTudo(); });
+      checarNovos().then(function () { if (st.view !== 'aj' && !document.body.classList.contains('com-folha')) renderTudo(); });
     });
   }).catch(function (err) {
     if (err && err.code === 'sem-config') { JC.pendente(true); return; }
