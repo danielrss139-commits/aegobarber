@@ -545,3 +545,23 @@ html[data-theme="dark"] .pro .scrim { background:rgba(0,0,0,.58); }
   .pro .ct > span:nth-child(4) { justify-self:start; }
   .pro .ct-a { justify-self:stretch; }
 }
+
+
+/* AEGO icon system v2 — visual consistente e seletor acessível */
+.pro .side-i svg.ui-icon, .pro .nav .tab svg.ui-icon { width:21px; height:21px; flex:none; }
+.pro .side-i svg.ui-icon *, .pro .nav .tab svg.ui-icon * { fill:none; stroke:currentColor; stroke-width:1.65; stroke-linecap:round; stroke-linejoin:round; }
+.pro .ct-a .btn svg path { fill:currentColor !important; stroke:none !important; }
+.ico-busca { min-height:44px !important; margin-bottom:10px; padding:0 14px !important; border:1px solid var(--hair-strong) !important; border-radius:14px; background:rgba(255,255,255,.6) !important; }
+.ico-grade { grid-template-columns:repeat(3,minmax(0,1fr)); gap:9px; max-height:48vh; overscroll-behavior:contain; }
+.ico-b { min-height:82px; justify-content:center; padding:11px 6px; border-radius:17px; }
+.ico-b .ico { width:26px; height:26px; }
+.ico-vazio { grid-column:1/-1; padding:18px 6px; text-align:center; }
+.svc-ico { cursor:pointer; position:relative; }
+.svc-ico::after { content:""; position:absolute; inset:-3px; border:1px solid rgba(176,138,94,.35); border-radius:18px; pointer-events:none; }
+html[data-theme="dark"] .ico-busca { color:var(--text) !important; background:rgba(255,255,255,.06) !important; border-color:rgba(255,255,255,.16) !important; }
+html[data-theme="dark"] .ico-b { color:var(--text); background:rgba(255,255,255,.06); border-color:rgba(255,255,255,.12); }
+html[data-theme="dark"] .ico-b .ico { stroke:var(--text); }
+html[data-theme="dark"] .ico-b.is-on { color:#151515; background:#eee; border-color:#eee; }
+html[data-theme="dark"] .ico-b.is-on .ico { stroke:#151515; }
+html[data-theme="dark"] .svc-ico { background:linear-gradient(145deg,#353331,#242322); border-color:rgba(255,255,255,.15); }
+html[data-theme="dark"] .svc-ico .ico { stroke:#f1f0ed; }

@@ -836,3 +836,7 @@ body::before { display: none; }
 .final-txt { transition: opacity .9s var(--ease) .15s; }
 .final.is-in { --p: 1; }
 html.rolando .marquee-track { animation-play-state: paused; }
+
+
+/* Renderização da capa: evita artefatos de composição em navegadores móveis */
+.capa-img, .capa img.foto { animation:none !important; transform:none !important; filter:none !important; image-rendering:auto; backface-visibility:visible; will-change:auto !important; }

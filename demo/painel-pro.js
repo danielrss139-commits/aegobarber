@@ -25,7 +25,7 @@
   function ehProduto(c) { return c.categoria === 'produto'; }
   function svg(d, vb) { return '<svg viewBox="' + (vb || '0 0 20 20') + '" aria-hidden="true">' + d + '</svg>'; }
   var ICO = {
-    zap: '<path class="wa-bubble" d="M20.2 11.7a8.2 8.2 0 0 1-12.1 7.2L3.5 20l1.1-4.4A8.2 8.2 0 1 1 20.2 11.7Z"/><path class="wa-phone" d="M8.1 7.7c.3-.6.6-.6 1-.6h.5c.2 0 .4.2.5.4l.8 1.8c.1.2 0 .4-.1.6l-.7.8c.7 1.4 1.7 2.4 3.1 3.1l.8-.7c.2-.2.4-.2.6-.1l1.8.8c.3.1.4.3.4.6v.5c0 .4-.1.7-.6 1-1 .5-2.8.1-5-1.8-2.1-1.9-3.5-4.8-3.1-6.4Z"/>',
+    zap: '<path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38a9.9 9.9 0 0 0 4.74 1.21c5.46 0 9.91-4.45 9.91-9.91C21.95 6.45 17.5 2 12.04 2Zm5.8 14.13c-.25.69-1.44 1.32-1.98 1.36-.53.05-1.03.24-3.47-.72-2.93-1.16-4.79-4.17-4.94-4.36-.14-.19-1.18-1.57-1.18-3 0-1.42.75-2.13 1.01-2.42.27-.29.58-.36.78-.36.19 0 .39 0 .56.01.18.01.42-.07.66.5.25.59.84 2.03.91 2.18.07.15.12.32.02.51-.1.19-.15.32-.29.49-.15.17-.31.38-.44.51-.15.15-.3.31-.13.6.17.29.76 1.25 1.63 2.03 1.12 1 2.06 1.31 2.35 1.45.29.15.46.12.63-.07.17-.19.73-.85.92-1.15.19-.29.39-.24.66-.15.27.1 1.71.81 2 .96.29.15.49.22.56.34.07.12.07.69-.18 1.39Z"/>',
     caixa: '<rect x="3.5" y="8" width="13" height="9" rx="2"/><path d="M3.5 8.5c0-1.8 2.9-3 6.5-3s6.5 1.2 6.5 3M3.5 12h13"/>',
     alerta: '<path d="M10 3.5l7.5 13h-15z"/><path d="M10 8.5v3.5M10 14.5h.01"/>',
     user: '<circle cx="10" cy="7" r="3.2"/><path d="M3.5 17c.8-3.4 3.4-5 6.5-5s5.7 1.6 6.5 5"/>',
@@ -108,7 +108,7 @@
       return '<li class="mini' + (i === 0 ? ' is-prox' : '') + '"><span class="mini-h num">' + esc(U.hhmm(a.inicio)) + '<small>' + esc(quando) + '</small></span>' +
         '<span class="mini-ico">' + JC.icone({ id: a.servicoId, nome: a.servicoNome }) + '</span>' +
         '<span class="mini-m"><b>' + esc(a.nome) + '</b><small>' + esc(a.servicoNome) + ' · ' + esc(U.brlCurto(a.preco)) + '</small></span>' +
-        '<a class="ibtn ibtn-sm" href="' + esc(P.zapLink(a)) + '" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp de ' + esc(a.nome) + '">' + svg(ICO.zap) + '</a></li>';
+        '<a class="ibtn ibtn-sm" href="' + esc(P.zapLink(a)) + '" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp de ' + esc(a.nome) + '">' + svg(ICO.zap, '0 0 24 24') + '</a></li>';
     }).join('');
   }
 
@@ -578,16 +578,30 @@
     linhaIco = b.closest('.svc-ed');
     var nome = linhaIco.querySelector('[data-k="nome"]').value, atual = linhaIco.dataset.icone || AEGO_ICONES.sugerir(nome), sug = AEGO_ICONES.sugerir(nome);
     $('icoSug').textContent = nome ? 'Sugestão para “' + nome + '”: ' + AEGO_ICONES.porId[sug].nome + '.' : 'Escolha o ícone que aparece para o cliente.';
-    $('icoGrade').innerHTML = AEGO_ICONES.lista.map(function (x) {
-      return '<button class="ico-b' + (x.id === atual ? ' is-on' : '') + '" type="button" data-id="' + x.id + '">' + AEGO_ICONES.svg(x.id) + '<span>' + esc(x.nome) + '</span></button>';
-    }).join('');
+    $('icoBusca').value = '';
+    renderGradeIcones(atual, '');
     P.abrirFolha('shIco');
+    setTimeout(function () { $('icoBusca').focus(); }, 250);
+  });
+  function renderGradeIcones(atual, termo) {
+    var q = String(termo || '').normalize('NFD').replace(/[\\u0300-\\u036f]/g, '').toLowerCase().trim();
+    var lista = AEGO_ICONES.lista.filter(function (x) {
+      return !q || (x.nome + ' ' + x.id + ' ' + x.palavras.join(' ')).normalize('NFD').replace(/[\\u0300-\\u036f]/g, '').toLowerCase().indexOf(q) >= 0;
+    });
+    $('icoGrade').innerHTML = lista.map(function (x) {
+      return '<button class="ico-b' + (x.id === atual ? ' is-on' : '') + '" type="button" data-id="' + esc(x.id) + '">' + AEGO_ICONES.svg(x.id) + '<span>' + esc(x.nome) + '</span></button>';
+    }).join('') || '<p class="small muted ico-vazio">Nenhum ícone encontrado. Tente outra palavra.</p>';
+  }
+  $('icoBusca').addEventListener('input', function () {
+    var atual = linhaIco && linhaIco.dataset.icone || 'estrela';
+    renderGradeIcones(atual, this.value);
   });
   $('icoGrade').addEventListener('click', function (e) {
     var b = e.target.closest('.ico-b'); if (!b || !linhaIco) return;
     linhaIco.dataset.icone = b.dataset.id;
     linhaIco.querySelector('[data-ico]').innerHTML = AEGO_ICONES.svg(b.dataset.id);
-    P.fecharFolhas(); P.toast('Ícone trocado. Toque em “Salvar serviços”.');
+    linhaIco.querySelector('[data-ico]').setAttribute('aria-label', 'Ícone escolhido: ' + AEGO_ICONES.porId[b.dataset.id].nome + '. Toque para trocar.');
+    P.fecharFolhas(); P.toast('Ícone escolhido. Toque em “Salvar serviços” para publicar.');
   });
   // ao digitar o nome de um serviço sem ícone escolhido, o ícone sugerido acompanha
   $('svcEd').addEventListener('input', function (e) {

@@ -22,6 +22,7 @@
 <script src="boot.js"></script>
 <script src="firebase-config.js" defer></script>
 <script src="icones.js" defer></script>
+<script src="ui-icones.js" defer></script>
 <script src="tema.js" defer></script>
 <script src="comum.js" defer></script>
 <script src="db-firebase.js" defer></script>
@@ -360,7 +361,8 @@
 <div class="sheet glass" id="shIco" role="dialog" aria-modal="true" aria-labelledby="shIcoT">
   <div class="sheet-grab"></div>
   <h2 id="shIcoT">Ícone do serviço</h2>
-  <p class="small muted" id="icoSug" style="margin:6px 0 12px"></p>
+  <p class="small muted" id="icoSug" style="margin:6px 0 12px">Escolha o símbolo que vai representar este serviço no site.</p>
+  <input class="input ico-busca" id="icoBusca" type="search" placeholder="Buscar ícone (ex.: degradê, barba, infantil)" autocomplete="off" aria-label="Buscar ícone">
   <div class="ico-grade" id="icoGrade"></div>
   <div class="sheet-actions"><button class="btn btn-text btn-block" data-fechar type="button">Fechar</button></div>
 </div>
