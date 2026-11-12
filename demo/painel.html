@@ -174,7 +174,6 @@
           <button class="chip" data-p="7" type="button" role="radio" aria-checked="false">7 dias</button>
           <button class="chip" data-p="mes" type="button" role="radio" aria-checked="false">Mês</button>
         </div>
-        <button class="btn btn-ghost btn-sm" id="exportCsv" type="button"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 3v10M6 9l4 4 4-4M4 16.5h12"/></svg>Exportar CSV</button>
       </div>
       <div class="fin-grid">
         <div class="fin-l">
@@ -220,22 +219,32 @@
         <p class="note" id="notifSt" style="margin:0 0 4px"></p>
         <div class="stack">
           <button class="btn btn-ghost btn-block" id="notifBtn" type="button">Ativar notificações</button>
-          <button class="btn btn-ghost btn-block" id="testeBtn" type="button">Testar aviso</button>
         </div>
       </div>
       <div class="sec lg">
-        <div class="sec-h"><h2>IA dos produtos</h2></div>
-        <p class="note" id="iaSt" style="margin:0 0 8px">A identificação usa a função /api/identificar-produto na Vercel.</p>
-        <label class="field"><span class="field-label">Token do painel (opcional)</span><input class="input" id="iaToken" type="password" autocomplete="off" maxlength="80" placeholder="Só se você definiu PAINEL_TOKEN"></label>
-        <div class="stack"><button class="btn btn-ghost btn-block" id="iaTestar" type="button">Testar conexão com a IA</button></div>
-      </div>
-      <div class="sec lg">
-        <div class="stack">
-          <button class="btn btn-ghost btn-block hidden" id="restaurarDemo" type="button">Restaurar dados da demonstração</button>
-          <button class="btn btn-text btn-block" id="sair" type="button">Sair</button>
-        </div>
+        <div class="stack"><button class="btn btn-text btn-block" id="sair" type="button">Sair</button></div>
         <p class="foot-mini" id="ajFoot"></p>
       </div>
+      <details class="sec lg manut" id="manut">
+        <summary><span class="manut-t"><b>Manutenção e Sistema</b><small>Exportar dados, testes e opções avançadas</small></span><svg class="manut-chev" viewBox="0 0 20 20" aria-hidden="true"><path d="M7 4l6 6-6 6"/></svg></summary>
+        <div class="manut-c">
+          <div class="manut-g">
+            <span class="eyebrow">Dados</span>
+            <button class="btn btn-ghost btn-block" id="exportCsv" type="button"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 3v10M6 9l4 4 4-4M4 16.5h12"/></svg>Exportar caixa (CSV)</button>
+            <button class="btn btn-ghost btn-block hidden" id="restaurarDemo" type="button">Restaurar dados da demonstração</button>
+          </div>
+          <div class="manut-g">
+            <span class="eyebrow">Avisos</span>
+            <button class="btn btn-ghost btn-block" id="testeBtn" type="button">Testar aviso</button>
+          </div>
+          <div class="manut-g">
+            <span class="eyebrow">IA dos produtos</span>
+            <p class="note" id="iaSt" style="margin:0">A identificação usa a função /api/identificar-produto na Vercel.</p>
+            <label class="field"><span class="field-label">Token do painel (opcional)</span><input class="input" id="iaToken" type="password" autocomplete="off" maxlength="80" placeholder="Só se você definiu PAINEL_TOKEN"></label>
+            <button class="btn btn-ghost btn-block" id="iaTestar" type="button">Testar conexão com a IA</button>
+          </div>
+        </div>
+      </details>
       </div>
       </div>
     </section>

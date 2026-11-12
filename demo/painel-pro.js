@@ -305,7 +305,7 @@
             '<span class="num" data-l="Gasto">' + esc(U.brlCurto(c.gasto)) + '</span>' +
             '<span data-l="Última">' + (c.ultima ? esc(P.diaCurto(c.ultima)) + '<small> · ' + c.dias + 'd</small>' : '—') + '</span>' +
             '<span><em class="tag tag-' + c.status + '">' + ROT[c.status] + '</em></span>' +
-            '<span class="ct-a">' + (zap ? '<a class="btn btn-ghost btn-sm" href="' + esc(zap) + '" target="_blank" rel="noopener noreferrer">' + svg(ICO.zap) + (c.status === 'sumido' ? 'Chamar de volta' : 'WhatsApp') + '</a>' : '') + '</span></div>';
+            '<span class="ct-a">' + (zap ? '<a class="wa-pill" href="' + esc(zap) + '" target="_blank" rel="noopener noreferrer">' + svg(ICO.zap) + (c.status === 'sumido' ? 'Chamar de volta' : 'WhatsApp') + '</a>' : '') + '</span></div>';
         }).join('');
     }).catch(P.falhaLeitura);
   };
@@ -422,7 +422,7 @@
   var MSG_IA = {
     'sem-chave': 'A IA ainda não foi ligada (falta a chave GEMINI_API_KEY na Vercel). O 3D ficou pronto; preencha os dados abaixo.',
     'sem-funcao': 'A função de IA não está publicada neste endereço (ela roda na Vercel). O 3D ficou pronto; preencha os dados abaixo.',
-    'token': 'O token do painel não confere. Ajuste em Ajustes > IA dos produtos.',
+    'token': 'O token do painel não confere. Ajuste em Ajustes > Manutenção e Sistema.',
     'limite': 'A IA atingiu o limite de uso agora. Tente de novo em alguns minutos ou preencha à mão.',
     'rede': 'Sem internet para falar com a IA. Preencha os dados à mão.'
   };

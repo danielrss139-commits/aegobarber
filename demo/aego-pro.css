@@ -838,3 +838,42 @@ img.ico-foto { display: block; object-fit: cover; object-position: 50% 30%; back
 .ico-b.is-on img.ico-foto { outline: 2px solid #fff; }
 .foto-ico img.ico-foto { width: 100%; height: auto; aspect-ratio: 16 / 10; border-radius: 18px; }
 html[data-theme="dark"] img.ico-foto { filter: invert(.92) hue-rotate(180deg); }
+
+/* ===== v16: refino (nome fixo, WhatsApp em pílula, saldo, Manutenção e Sistema) ===== */
+/* nome da marca: estático, só uma entrada suave de 0,5 s */
+.pg-cliente .hero-nome, .side-brand-t b {
+  background: none !important; -webkit-text-fill-color: currentColor !important; color: #171717 !important;
+  animation: aegoNomeIn .5s ease-out both !important; }
+html[data-theme="dark"] .side-brand-t b { color: #f2efe9 !important; }
+@keyframes aegoNomeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .pg-cliente .hero-nome, .side-brand-t b { animation: none !important; } }
+
+/* WhatsApp do cliente: pílula neutra */
+.pro .ct-a { display: flex; justify-content: flex-end; align-items: center; }
+.pro .ct-a .wa-pill { display: inline-flex; align-items: center; justify-content: center; gap: 6px; height: 32px; padding: 0 14px 0 12px;
+  border-radius: 999px; background: #F4F4F5; border: 1px solid #E4E4E7; color: #27272A; font-size: 12px; font-weight: 500; line-height: 1;
+  letter-spacing: 0; text-decoration: none; white-space: nowrap; transition: background .2s ease, border-color .2s ease, transform .15s ease; -webkit-tap-highlight-color: transparent; }
+.pro .ct-a .wa-pill:hover { background: #EBEBED; border-color: #D4D4D8; }
+.pro .ct-a .wa-pill:active { transform: scale(.97); }
+.pro .ct-a .wa-pill svg { width: 15px; height: 15px; flex: none; }
+.pro .ct-a .wa-pill svg * { fill: none !important; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+html[data-theme="dark"] .pro .ct-a .wa-pill { background: rgba(255,255,255,.07); border-color: rgba(255,255,255,.14); color: #f1f0ed; }
+
+/* Caixa: saldo com respiro e número que se adapta */
+.pro .saldo { box-sizing: border-box; padding: 20px 22px !important; margin: 0 0 4px !important; min-width: 0; overflow: hidden; }
+.pro .saldo .eyebrow { display: block; }
+.pro .saldo .big { font-size: clamp(34px, 11vw, 54px) !important; font-variant-numeric: tabular-nums; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
+.pro .fin-top { display: flex; justify-content: flex-start; }
+
+/* Manutenção e Sistema: seção secundária recolhida */
+.manut { padding: 0 !important; }
+.manut > summary { list-style: none; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 16px 18px; -webkit-tap-highlight-color: transparent; }
+.manut > summary::-webkit-details-marker { display: none; }
+.manut-t { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.manut-t b { font-size: 15px; font-weight: 500; }
+.manut-t small { font-size: 12px; color: var(--muted); }
+.manut-chev { width: 18px; height: 18px; flex: none; fill: none; stroke: var(--muted); stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; transition: transform .25s ease; }
+.manut[open] .manut-chev { transform: rotate(90deg); }
+.manut-c { display: flex; flex-direction: column; gap: 18px; padding: 4px 18px 18px; border-top: 1px solid var(--hair, rgba(20,20,20,.08)); padding-top: 16px; }
+.manut-g { display: flex; flex-direction: column; gap: 8px; }
+.manut-g .btn svg { width: 16px; height: 16px; margin-right: 6px; fill: none; stroke: currentColor; stroke-width: 1.6; }
