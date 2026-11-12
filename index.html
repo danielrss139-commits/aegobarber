@@ -21,12 +21,12 @@ body::before{content:"";position:fixed;inset:-15%;z-index:-1;pointer-events:none
 @keyframes flutua{to{transform:translate3d(-4%,3%,0) scale(1.08)}}
 @keyframes entra{from{transform:scale(1.14);opacity:0}to{transform:scale(1.02);opacity:1}}
 @keyframes sobe{from{transform:translateY(14px);opacity:0}to{transform:none;opacity:1}}
-.capa{position:relative;width:100%;max-width:560px;margin:0 auto;aspect-ratio:4/4.6;overflow:hidden}
-.capa img.foto{display:block;width:100%;height:100%;object-fit:cover;object-position:center 30%;animation:none!important;transform:none!important;filter:none!important;image-rendering:auto;backface-visibility:visible;will-change:auto}
+.capa{position:relative;width:100%;max-width:560px;margin:0 auto;aspect-ratio:1122/1402;overflow:hidden}
+.capa img.foto{display:block;width:100%;height:100%;object-fit:cover;object-position:center top;-webkit-mask-image:linear-gradient(180deg,#000 0%,#000 62%,rgba(0,0,0,.55) 80%,transparent 100%);mask-image:linear-gradient(180deg,#000 0%,#000 62%,rgba(0,0,0,.55) 80%,transparent 100%);animation:none!important;transform:none!important;filter:none!important;image-rendering:auto;backface-visibility:visible;will-change:auto}
 @media (prefers-reduced-motion:reduce){.capa img.foto{animation:none!important}.capa,body::before{animation:none!important}}
-.capa::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.3),rgba(0,0,0,0) 30%)}
+.capa::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg,rgba(0,0,0,.28),rgba(0,0,0,0) 26%,rgba(233,231,226,0) 70%,#e9e7e2 100%)}
 .capa img.logo{position:absolute;z-index:1;top:22px;left:50%;transform:translateX(-50%);width:72px;filter:drop-shadow(0 2px 8px rgba(0,0,0,.25))}
-main{position:relative;max-width:520px;margin:0 auto;padding:28px 22px calc(40px + env(safe-area-inset-bottom));text-align:center}
+main{position:relative;z-index:1;max-width:520px;margin:-56px auto 0;padding:0 22px calc(40px + env(safe-area-inset-bottom));text-align:center}
 :root{--marca-base:#171717;--marca-gold:#a98250;--marca-shine:#f4dfbd}
 html[data-theme="dark"],body[data-theme="dark"],html.dark{--marca-base:#f7f4ee;--marca-gold:#c6a477;--marca-shine:#fff}
 .marca{display:inline-block;position:relative;font-family:"Josefin",sans-serif;font-weight:400;font-size:14px;letter-spacing:.42em;padding-left:.42em;text-transform:uppercase;color:var(--marca-base);background-image:linear-gradient(105deg,var(--marca-base) 0%,var(--marca-base) 28%,var(--marca-gold) 40%,var(--marca-shine) 50%,var(--marca-gold) 60%,var(--marca-base) 72%,var(--marca-base) 100%);background-size:300% 100%;background-position:100% 50%;background-repeat:no-repeat;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:marcaFade 3.2s linear infinite!important;will-change:background-position}
@@ -36,8 +36,7 @@ h1 em{font-style:italic}
 .lede{color:#555;font-size:16.5px;line-height:1.55;max-width:400px;margin:0 auto;animation:sobe .8s .6s both}
 ul{list-style:none;display:grid;gap:10px;margin:28px 0 24px;text-align:left;animation:sobe .8s .75s both}
 li{display:flex;gap:14px;align-items:center;padding:16px 18px;border-radius:20px;font-size:15px;color:#333;line-height:1.35;
- background:linear-gradient(160deg,rgba(255,255,255,.55),rgba(244,242,238,.25));border:1px solid rgba(255,255,255,.75);
- -webkit-backdrop-filter:blur(24px) saturate(180%);backdrop-filter:blur(24px) saturate(180%);
+ background:linear-gradient(160deg,rgba(255,255,255,.78),rgba(244,242,238,.5));border:1px solid rgba(255,255,255,.9);
  box-shadow:inset 0 1px 0 rgba(255,255,255,.9),0 10px 28px -14px rgba(60,45,30,.22)}
 li b{display:block;font-family:"Josefin",sans-serif;font-weight:400;font-size:17px;color:#151515;margin-bottom:2px}
 li span.n{flex:none;width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font-family:"Playfair",serif;font-size:16px;background:rgba(21,21,21,.06);border:1px solid rgba(21,21,21,.1)}
@@ -48,6 +47,15 @@ li span.n{flex:none;width:34px;height:34px;border-radius:50%;display:grid;place-
 .acoes{animation:sobe .8s .9s both}
 small{display:block;margin-top:22px;color:#888;font-size:13px}
 @media (prefers-reduced-motion:reduce){*:not(.marca){animation:none!important}.marca{animation:marcaFade 3.2s linear infinite!important;background-position:100% 50%;-webkit-text-fill-color:transparent}}
+/* animações ao descer (rolagem nativa, sem JS, não trava) */
+@keyframes revela{from{opacity:0;transform:translateY(28px) scale(.97)}to{opacity:1;transform:none}}
+@keyframes capaSai{to{transform:scale(1.08) translateY(-6%);opacity:.35}}
+h1 em{display:inline-block;background:linear-gradient(105deg,#151515 0%,#151515 35%,#a98250 48%,#f4dfbd 52%,#a98250 58%,#151515 70%);background-size:300% 100%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:marcaFade 4.5s 1.2s linear infinite}
+@supports (animation-timeline:view()){
+ li,.acoes,small{animation:revela linear both!important;animation-timeline:view()!important;animation-range:entry 0% entry 70%!important}
+ .capa img.foto{animation:capaSai linear both!important;animation-timeline:scroll(root)!important;animation-range:0 90vh!important;transform-origin:center top}
+}
+@media (prefers-reduced-motion:reduce){li,.acoes,small,.capa img.foto,h1 em{animation:none!important;opacity:1!important;transform:none!important}}
 </style>
 </head>
 <body>

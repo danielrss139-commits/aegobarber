@@ -20,6 +20,8 @@
   aplicar(saved);
   document.addEventListener('click',function(e){
     var btn=e.target.closest('[data-theme-toggle]');if(!btn)return;
+    root.classList.add('tema-troca');
     aplicar(root.getAttribute('data-theme')==='dark'?'light':'dark');
+    setTimeout(function(){root.classList.remove('tema-troca');},420);
   });
 })();

@@ -257,15 +257,19 @@
       baseEl.style.transform = 'rotateX(-90deg) translateZ(' + (H / 2) + 'px)';
       obj.appendChild(topoEl); obj.appendChild(baseEl);
       el.style.setProperty('--p3d-d', D + 'px'); el.style.setProperty('--p3d-h', H + 'px');
-      pintar();
+      ultA = null; pintar();
     }
     // luz fixa na cena: cada face clareia/escurece conforme gira (parece volume de verdade)
+    var ultA = null, ultT = null;
     function pintar() {
+      if (estado.a === ultA && estado.t === ultT) return;
+      ultA = estado.a; ultT = estado.t;
       obj.style.transform = 'rotateX(' + estado.t + 'deg) rotateY(' + estado.a + 'deg)';
       for (var i = 0; i < faces.length; i++) {
         var ang = (i * 360 / N + estado.a) * Math.PI / 180, c = Math.cos(ang - .55);
         var luz = .5 + .55 * Math.max(0, c) + .12 * Math.pow(Math.max(0, Math.cos(ang - .35)), 24);
-        faces[i].style.filter = 'brightness(' + luz.toFixed(3) + ')';
+        var fl = 'brightness(' + luz.toFixed(2) + ')';
+        if (faces[i]._fl !== fl) { faces[i]._fl = fl; faces[i].style.filter = fl; }
       }
       if (topoEl) topoEl.style.filter = 'brightness(' + (1.02 + estado.t / -200).toFixed(3) + ')';
     }

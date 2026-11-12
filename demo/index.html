@@ -36,6 +36,7 @@
 
 <main id="fluxo" class="wrap">
   <header class="hero">
+    <button class="ibtn theme-toggle tema-flutua lg" type="button" data-theme-toggle aria-label="Ativar tema escuro" title="Alternar tema"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.2 15.2A8.5 8.5 0 0 1 8.8 3.8 8.7 8.7 0 1 0 20.2 15.2Z"/></svg></button>
     <div class="capa rise" style="--i:0">
       <img class="capa-img" src="img/capa.webp" alt="Barbeiro realizando acabamento em um corte" width="1122" height="1402" fetchpriority="high" decoding="async" loading="eager">
       <img class="capa-logo" src="img/aego-logo.png" alt="AEGO">
@@ -87,18 +88,20 @@
   <!-- VITRINE: pomadas e produtos da casa (cadastrados no painel com IA) -->
   <section class="vitrine" id="vitrine" aria-labelledby="vtT" hidden>
     <div class="vt-pin" id="vtPin">
-      <div class="vt-stage">
+      <div class="vt-stage" id="vtStage">
         <div class="vt-big" id="vtBig" aria-hidden="true"></div>
         <div class="vt-titulo"><span class="eyebrow">Leve para casa</span><h2 id="vtT">Produtos da casa</h2></div>
         <div class="vt-3d" id="vt3d" aria-hidden="true"></div>
-        <p class="vt-dica" id="vtDica">Role para girar</p>
+        <p class="vt-dica" id="vtDica">Deslize para o lado</p>
+        <button class="vt-seta vt-ant lg" type="button" id="vtAnt" aria-label="Produto anterior"><svg viewBox="0 0 18 18" aria-hidden="true"><path d="M11 3.5L5.5 9l5.5 5.5"/></svg></button>
+        <button class="vt-seta vt-prox lg" type="button" id="vtProx" aria-label="Próximo produto"><svg viewBox="0 0 18 18" aria-hidden="true"><path d="M7 3.5L12.5 9 7 14.5"/></svg></button>
         <div class="vt-prog" id="vtProg" aria-hidden="true"></div>
         <div class="vt-info lg" id="vtInfo"></div>
       </div>
     </div>
     <div class="vt-stack">
       <div class="vt-stack-h"><span class="eyebrow">Usamos e recomendamos</span><h2>Para o corte<br>durar até a próxima</h2></div>
-      <div id="vtCards"></div>
+      <div id="vtCards" class="vt-trilho"></div>
     </div>
   </section>
 

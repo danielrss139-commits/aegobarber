@@ -1,9 +1,9 @@
 /* =====================================================================
    AEGO · Vitrine de produtos na página do cliente (index.html)
    ---------------------------------------------------------------------
-   1) Palco fixo guiado pela rolagem: texto gigante desliza ao fundo, a pomada 3D gira conforme você rola
-      e troca de produto a cada trecho (inspirado nos sites de carro/viagem com scroll cinematográfico).
-   2) Cartões de vidro que empilham (sticky) com foto, descrição e preço.
+   1) Palco 3D: a pomada gira sozinha e troca de produto deslizando para o lado ou pelas setas
+      (sem prender a rolagem da página) (inspirado nos sites de carro/viagem com scroll cinematográfico).
+   2) Carrossel horizontal de cartões de vidro (deslize) com foto, descrição e preço.
    3) Toque em "Ver em 3D": folha com o modelo para girar com o dedo e reservar pelo WhatsApp.
    Só aparece se a barbearia tiver produtos ativos (cadastrados no painel).
    ===================================================================== */
@@ -32,16 +32,17 @@
     var v = $('vitrine');
     if (!lista.length) { v.hidden = true; return; }
     v.hidden = false;
-    var com3d = lista.filter(function (p) { return p.modelo3d; });
-    v.style.setProperty('--n', Math.max(1, com3d.length));
+    com3d = lista.filter(function (p) { return p.modelo3d; });
     var big = (lista.map(function (p) { return p.categoria || 'Pomada'; }).filter(function (c, i, a) { return a.indexOf(c) === i; }).join(' · ') + ' · ').toUpperCase();
     $('vtBig').innerHTML = '<span>' + esc(big + big + big) + '</span>';
     $('vtProg').innerHTML = com3d.map(function (_, i) { return '<i class="' + (i ? '' : 'on') + '"></i>'; }).join('');
     $('vtPin').hidden = !com3d.length;
+    $('vtAnt').hidden = $('vtProx').hidden = com3d.length < 2;
+    var velhoM = $('vt3d').querySelectorAll('.vt-m'); if (palco) { palco.destruir(); palco = null; } velhoM.forEach(function (x) { x.remove(); });
     $('vtCards').innerHTML = lista.map(function (p, i) {
       var c = capa(p);
       return '<article class="vt-card lg" style="--i:' + i + '" data-id="' + esc(p.id) + '">' +
-        '<div class="vt-card-img">' + (c ? '<img src="' + esc(c) + '" alt="' + esc(p.nome) + '" loading="lazy" decoding="async">' : AEGO_ICONES.svg('pomada', 'ico-xl')) +
+        '<div class="vt-card-img">' + (c ? '<img src="' + esc(c) + '" alt="' + esc(p.nome) + '" loading="lazy" decoding="async" width="300" height="300">' : AEGO_ICONES.svg('pomada', 'ico-xl')) +
         (p.destaque ? '<em class="tag tag-dest">Mais vendida</em>' : '') + '</div>' +
         '<div class="vt-card-b"><span class="pd-cat">' + esc([p.marca, p.categoria].filter(Boolean).join(' · ')) + '</span><h3>' + esc(p.nome) + '</h3>' +
         '<div class="pc-meta">' + (p.fixacao ? dots(p.fixacao) + '<span>fixação ' + FIX[p.fixacao] + '</span>' : '') + (p.brilho ? '<span>· brilho ' + esc(p.brilho.toLowerCase()) + '</span>' : '') + '</div>' +
@@ -51,17 +52,26 @@
     }).join('');
     atual = -1;
     if (com3d.length) mostrar(0, true);
-    rolar();
   }
 
+  /* ---------- palco: um produto por vez, troca por deslize/setas, sem sequestrar a rolagem ---------- */
+  var com3d = [], visivel = true, trocando = false;
   function mostrar(i, primeira) {
-    var com3d = lista.filter(function (p) { return p.modelo3d; });
+    var n = com3d.length; if (!n) return;
+    i = ((i % n) + n) % n;
     var p = com3d[i]; if (!p || i === atual) return;
+    var dir = i > atual ? 1 : -1; if (atual === n - 1 && i === 0) dir = 1; if (atual === 0 && i === n - 1) dir = -1;
     atual = i;
-    if (palco) palco.destruir();
-    var el = $('vt3d');
-    palco = P3D.criar(el, p.modelo3d, { auto: false, arrastar: false, estatico: true, inclinacao: -14 });
-    if (!primeira && !calmo) { el.classList.remove('troca'); void el.offsetWidth; el.classList.add('troca'); }
+    var el = $('vt3d'), antigo = palco, velho = el.querySelector('.vt-m');
+    var box = document.createElement('div'); box.className = 'vt-m';
+    if (!primeira && !calmo) { box.classList.add('entra'); box.style.setProperty('--d', dir); }
+    el.appendChild(box);
+    palco = P3D.criar(box, p.modelo3d, { auto: visivel && !calmo, arrastar: false, faces: 28, inclinacao: -12 });
+    if (velho) {
+      if (!primeira && !calmo) { velho.style.setProperty('--d', dir); velho.classList.add('sai'); }
+      setTimeout(function () { if (antigo) antigo.destruir(); if (velho.parentNode) velho.parentNode.removeChild(velho); }, calmo ? 0 : 420);
+    }
+    if (!primeira && !calmo) requestAnimationFrame(function () { box.classList.remove('entra'); });
     var info = $('vtInfo');
     info.innerHTML = '<span class="vt-cat">' + esc([p.marca, p.categoria].filter(Boolean).join(' · ')) + '</span>' +
       '<h3>' + esc(p.nome) + '</h3><span class="vt-preco num">' + esc(U.brlCurto(p.preco)) + '</span>' +
@@ -69,35 +79,26 @@
       '<button class="btn btn-primary" type="button" data-ver="' + esc(p.id) + '">Ver em 3D</button>';
     if (!primeira && !calmo) { info.classList.remove('troca'); void info.offsetWidth; info.classList.add('troca'); }
     $('vtProg').querySelectorAll('i').forEach(function (x, k) { x.classList.toggle('on', k === i); });
+    $('vtBig').style.transform = 'translate3d(' + (-(i / Math.max(1, n)) * 40) + '%,0,0)';
   }
-
-  /* ---------- rolagem: gira o produto, desliza o texto, empilha cartões ---------- */
-  var tick = false;
-  function rolar() {
-    tick = false;
-    var pin = $('vtPin');
-    if (pin && !pin.hidden && palco) {
-      var r = pin.getBoundingClientRect(), total = pin.offsetHeight - innerHeight;
-      var p = Math.max(0, Math.min(1, -r.top / Math.max(1, total)));
-      var n = lista.filter(function (x) { return x.modelo3d; }).length || 1;
-      var idx = Math.min(n - 1, Math.floor(p * n)), loc = p * n - idx;
-      if (r.bottom > 0 && r.top < innerHeight) {
-        mostrar(idx);
-        if (palco) { palco.angulo(-30 + loc * 360); palco.inclinar(-8 - Math.sin(loc * Math.PI) * 18); }
-        $('vtBig').style.transform = 'translate3d(' + (-p * 55) + '%,0,0)';
-        $('vtDica').style.opacity = p > .04 ? 0 : 1;
-      }
-    }
-    var cards = document.querySelectorAll('.vt-card');
-    cards.forEach(function (c, i) {
-      var prox = cards[i + 1]; if (!prox) { c.style.setProperty('--s', 0); return; }
-      var a = c.getBoundingClientRect(), b = prox.getBoundingClientRect();
-      var s = Math.max(0, Math.min(1, 1 - (b.top - a.top) / Math.max(1, a.height)));
-      c.style.setProperty('--s', s.toFixed(3));
-    });
-  }
-  window.addEventListener('scroll', function () { if (!tick) { tick = true; requestAnimationFrame(rolar); } }, { passive: true });
-  window.addEventListener('resize', function () { requestAnimationFrame(rolar); });
+  function passo(d) { if (trocando) return; trocando = true; mostrar(atual + d); $('vtDica').style.opacity = 0; setTimeout(function () { trocando = false; }, 380); }
+  $('vtAnt').addEventListener('click', function () { passo(-1); });
+  $('vtProx').addEventListener('click', function () { passo(1); });
+  /* deslize horizontal no palco (vertical continua rolando a página normalmente) */
+  (function () {
+    var st = $('vtStage'), x0 = 0, y0 = 0, ativo = false;
+    st.addEventListener('touchstart', function (e) { if (e.target.closest('button')) return; var t = e.touches[0]; x0 = t.clientX; y0 = t.clientY; ativo = true; }, { passive: true });
+    st.addEventListener('touchend', function (e) {
+      if (!ativo) return; ativo = false;
+      var t = e.changedTouches[0], dx = t.clientX - x0, dy = t.clientY - y0;
+      if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.4) passo(dx < 0 ? 1 : -1);
+    }, { passive: true });
+  })();
+  /* só anima quando o palco está na tela (economiza bateria e evita travadas) */
+  if ('IntersectionObserver' in window) new IntersectionObserver(function (es) {
+    visivel = es[0].isIntersecting; if (palco && palco.girar) palco.girar(visivel && !calmo);
+  }, { threshold: .15 }).observe($('vtStage'));
+  function rolar() {}
 
   /* ---------- folha do produto ---------- */
   function abrir(id) {
