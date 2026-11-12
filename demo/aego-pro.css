@@ -691,28 +691,10 @@ html.tema-troca, html.tema-troca * { transition: background-color .35s ease, col
   .vt-m, .vt-big, .theme-toggle svg { transition: none !important; }
 }
 
-/* ---------- animações ao descer + nomes (rolagem nativa, sem JS) ---------- */
-@keyframes aegoRevela { from { opacity: 0; transform: translate3d(0, 34px, 0) scale(.97); } to { opacity: 1; transform: none; } }
-@keyframes aegoTitulo { from { opacity: 0; letter-spacing: .4em; filter: blur(4px); } to { opacity: 1; filter: none; } }
-@keyframes aegoBrilho { 0% { background-position: 100% 50%; } 100% { background-position: -100% 50%; } }
-.step-title, .vt-titulo h2, .vt-stack-h h2, .vt-info h3 {
-  background: linear-gradient(105deg, currentColor 0%, currentColor 35%, #a98250 46%, #f4dfbd 50%, #a98250 56%, currentColor 66%, currentColor 100%);
-  background-size: 300% 100%; background-position: 100% 50%; -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
-  animation: aegoBrilho 5s linear infinite;
-}
-html[data-theme="dark"] .step-title, html[data-theme="dark"] .vt-titulo h2, html[data-theme="dark"] .vt-stack-h h2, html[data-theme="dark"] .vt-info h3 {
-  background-image: linear-gradient(105deg, #f4f0e9 0%, #f4f0e9 35%, #c6a477 46%, #fff 50%, #c6a477 56%, #f4f0e9 66%, #f4f0e9 100%);
-}
-@supports (animation-timeline: view()) {
-  .step, .av-sec, .works, .vt-stack-h, .vt-titulo, .foot, .final {
-    animation: aegoRevela linear both !important; animation-timeline: view() !important; animation-range: entry 0% entry 60% !important;
-  }
-  .vt-trilho .vt-card { animation: aegoRevela linear both; animation-timeline: view(inline); animation-range: entry 0% entry 80%; }
-}
-@media (prefers-reduced-motion: reduce) {
-  .step, .av-sec, .works, .vt-stack-h, .vt-titulo, .foot, .final, .vt-trilho .vt-card { animation: none !important; opacity: 1 !important; transform: none !important; }
-  .step-title, .vt-titulo h2, .vt-stack-h h2, .vt-info h3 { animation: none; }
-}
+/* nomes sem animação, proporção corrigida */
+.vt-stack-h h2 { font-size: 21px !important; letter-spacing: .05em !important; line-height: 1.25 !important; }
+.vt-titulo h2 { font-size: 18px !important; letter-spacing: .1em !important; }
+.vt-info h3, .vt-card-b h3 { font-size: 19px !important; line-height: 1.25 !important; overflow-wrap: anywhere; padding-bottom: 2px; }
 /* foto da capa inteira, com fade para o fundo (sem corte seco) */
 .capa { aspect-ratio: 1122 / 1402 !important; }
 .capa-img { object-position: center top !important; filter: none !important; will-change: auto !important;
@@ -723,3 +705,10 @@ html[data-theme="dark"] .capa::after { background: linear-gradient(180deg, rgba(
 .foto-ico .ico, .svc-ico .ico, .mini-ico .ico, .ico-b .ico { stroke: var(--ink) !important; }
 html[data-theme="dark"] .foto-ico .ico, html[data-theme="dark"] .svc-ico .ico, html[data-theme="dark"] .mini-ico .ico, html[data-theme="dark"] .ico-b:not(.is-on) .ico { stroke: #f4f0e9 !important; }
 .ico-b.is-on .ico { stroke: #fff !important; } html[data-theme="dark"] .ico-b.is-on .ico { stroke: #111 !important; }
+
+.vt-seta { position: absolute !important; top: 42% !important; bottom: auto !important; transform: translateY(-50%); margin: 0 !important; }
+.vt-seta:active { transform: translateY(-50%) scale(.92); }
+.vt-ant { left: 10px !important; right: auto !important; } .vt-prox { right: 10px !important; left: auto !important; }
+.vt-prog { right: auto !important; left: 50% !important; top: auto !important; bottom: calc(var(--safe-b) + 70px) !important; transform: translateX(-50%) !important; display: flex !important; gap: 6px !important; }
+.vt-prog i { width: 18px !important; height: 4px !important; } .vt-prog i.on { width: 32px !important; height: 4px !important; }
+.hero-nome { font-size: clamp(22px, 7.4vw, 30px) !important; letter-spacing: .1em !important; padding: 0 .1em .08em !important; line-height: 1.2 !important; max-width: 100%; }

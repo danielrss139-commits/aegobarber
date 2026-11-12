@@ -3,6 +3,8 @@
   'use strict';
   var KEY='aego_barber_theme';
   var root=document.documentElement;
+  /* modo escuro só no painel do barbeiro; o site do cliente fica sempre claro */
+  if(!/painel/.test(location.pathname)){root.setAttribute('data-theme','light');return;}
   function aplicar(theme){
     theme=theme==='dark'?'dark':'light';
     root.setAttribute('data-theme',theme);
