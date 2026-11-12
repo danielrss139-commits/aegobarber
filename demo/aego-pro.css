@@ -790,3 +790,40 @@ html[data-theme="dark"] .wordmark img.logo, html[data-theme="dark"] .side-brand 
   .sheet, .sheet.glass { -webkit-backdrop-filter: blur(16px) !important; backdrop-filter: blur(16px) !important; }
 }
 @media (prefers-reduced-motion: reduce) { .pg-cliente .hero-nome, .side-brand-t b { animation: marcaFade 3.2s linear infinite !important; } }
+
+/* ===== v14 ===== */
+/* fundo vivo sem filtro de desfoque (era o que travava o site): manchas já são suaves, só deslizam */
+body::before, body::after { filter: none !important; will-change: transform; }
+/* painel no celular: topo só com a saudação */
+@media (max-width: 979px) {
+  .pro .top-n { display: none !important; }
+  .pro .top-g { font-size: 24px !important; font-weight: 300 !important; letter-spacing: -.02em; color: var(--ink) !important; line-height: 1.2; }
+}
+/* serviços: cartas que se levantam ao rolar */
+@supports (animation-timeline: view()) {
+  .pg-cliente #servicos { perspective: 900px; }
+  .pg-cliente #servicos > li, .pg-cliente #servicos .row {
+    transform-origin: 50% 100%;
+    animation: aegoCarta linear both !important; animation-timeline: view() !important; animation-range: entry 0% entry 90% !important; }
+}
+@keyframes aegoCarta {
+  from { opacity: 0; transform: translate3d(0, 46px, 0) rotateX(-22deg) scale(.94); }
+  to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .pg-cliente #servicos > li, .pg-cliente #servicos .row { animation: none !important; } }
+
+/* ===== PC: site do cliente em duas colunas (capa fixa à esquerda, agendamento à direita) ===== */
+@media (min-width: 1024px) {
+  .pg-cliente #fluxo.wrap { max-width: 1180px; display: grid; grid-template-columns: minmax(0, 1fr) 540px; column-gap: 64px; align-items: start; padding-left: 40px; padding-right: 40px; }
+  .pg-cliente #fluxo > * { grid-column: 2; min-width: 0; }
+  .pg-cliente #fluxo > .hero { grid-column: 1; grid-row: 1 / span 30; position: sticky; top: 28px; text-align: left; }
+  .pg-cliente .hero .capa { width: 100% !important; margin: 0 0 22px !important; aspect-ratio: auto !important; height: calc(100vh - 230px); min-height: 420px; border-radius: 28px !important;
+    -webkit-mask-image: none !important; mask-image: none !important; }
+  .pg-cliente .hero .capa::after { background: linear-gradient(180deg, rgba(0,0,0,.25), rgba(0,0,0,0) 30%, rgba(0,0,0,0) 55%, rgba(0,0,0,.5)) !important; }
+  .pg-cliente .capa-frase { color: #fff !important; font-size: 40px !important; left: 32px !important; bottom: 28px !important; }
+  .pg-cliente .hero-nome, .pg-cliente .hero-lede { text-align: left; }
+  .pg-cliente .trust { justify-content: flex-start !important; }
+  .pg-cliente #fluxo > .step:first-of-type, .pg-cliente #s1 { margin-top: 28px; }
+  .pg-cliente .final { margin-left: 0 !important; margin-right: 0 !important; border-radius: 28px; }
+  .pg-cliente .vitrine .vt-bg, .pg-cliente .vt-fundo { max-width: 100%; }
+  .pg-cliente .bar { left: auto !important; right: max(40px, calc((100vw - 1180px) / 2 + 40px)) !important; width: 540px; max-width: 540px; margin: 0 !important; }
+}
