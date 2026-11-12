@@ -421,6 +421,59 @@ body.pro::after { opacity: 1 !important; background:
 }
 @media (min-width: 1280px) { .kpis { gap: 14px; } .g-dash { grid-template-columns: minmax(0, 1fr) minmax(0, 1.5fr); } }
 
+/* AEGO · nome da barbearia com fade adaptável aos dois temas */
+:root {
+  --aego-name-a:#171717;
+  --aego-name-b:#9b8060;
+  --aego-name-c:#d8c5a9;
+}
+html[data-theme="dark"] {
+  --aego-name-a:#f4f0e9;
+  --aego-name-b:#c2a27d;
+  --aego-name-c:#fff;
+}
+.hero-nome {
+  color:var(--aego-name-a) !important;
+  background:linear-gradient(105deg,var(--aego-name-a) 0%,var(--aego-name-b) 42%,var(--aego-name-c) 52%,var(--aego-name-b) 62%,var(--aego-name-a) 100%);
+  background-size:220% 100%;
+  background-position:100% 50%;
+  -webkit-background-clip:text;
+  background-clip:text;
+  -webkit-text-fill-color:transparent;
+  animation:aegoNomeFade 6s ease-in-out infinite;
+}
+@keyframes aegoNomeFade {
+  0%,100% { background-position:100% 50%; }
+  50% { background-position:0% 50%; }
+}
+@media (prefers-reduced-motion:reduce) {
+  .hero-nome { animation:none !important; background-position:50% 50%; }
+}
+
+/* Vitrine: mantém o palco 3D e os cartões sticky, com percurso mais curto */
+.vt-pin { height:calc(100svh * var(--n,3) * .52 + 24svh); }
+.vt-card {
+  top:calc(var(--safe-t) + 60px + var(--i) * 8px);
+  min-height:320px;
+  margin-bottom:18px;
+}
+.vt-card-img { height:170px; }
+.vt-stack { padding-bottom:28px; }
+.vt-card-b p { color:var(--muted); }
+html[data-theme="dark"] .vt-card-img {
+  background:radial-gradient(70% 70% at 50% 55%,rgba(255,255,255,.12),rgba(255,255,255,.02)),linear-gradient(160deg,rgba(176,138,94,.2),rgba(255,255,255,.035));
+}
+html[data-theme="dark"] .vt-card-b p { color:#c2c0ba; }
+html[data-theme="dark"] .pd-chips span {
+  color:var(--text);
+  background:rgba(255,255,255,.07);
+  border-color:rgba(255,255,255,.13);
+}
+@media (max-width:600px) {
+  .vt-card { min-height:300px; margin-bottom:14px; }
+  .vt-card-img { height:150px; }
+}
+
 /* ======================================================================
    VITRINE DO CLIENTE (index.html) · animação guiada pela rolagem
    ====================================================================== */
