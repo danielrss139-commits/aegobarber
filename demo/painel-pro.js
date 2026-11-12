@@ -305,7 +305,7 @@
             '<span class="num" data-l="Gasto">' + esc(U.brlCurto(c.gasto)) + '</span>' +
             '<span data-l="Última">' + (c.ultima ? esc(P.diaCurto(c.ultima)) + '<small> · ' + c.dias + 'd</small>' : '—') + '</span>' +
             '<span><em class="tag tag-' + c.status + '">' + ROT[c.status] + '</em></span>' +
-            '<span class="ct-a">' + (zap ? '<a class="wa-pill" href="' + esc(zap) + '" target="_blank" rel="noopener noreferrer">' + svg(ICO.zap) + (c.status === 'sumido' ? 'Chamar de volta' : 'WhatsApp') + '</a>' : '') + '</span></div>';
+            '<span class="ct-a">' + (zap ? '<a class="wa-pill" href="' + esc(zap) + '" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp de ' + esc(c.nome) + '"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22z"/></svg>' + (c.status === 'sumido' ? 'Chamar de volta' : 'WhatsApp') + '</a>' : '') + '</span></div>';
         }).join('');
     }).catch(P.falhaLeitura);
   };

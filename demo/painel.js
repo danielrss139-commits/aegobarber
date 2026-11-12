@@ -217,10 +217,11 @@
     function entrar() {
       if (tok !== navTok) return;
       mostrarView(v); window.scrollTo(0, 0); renderTudo(true);
-      if (!reduz()) $('v-' + v).animate([{ opacity: 0, transform: 'translateY(' + 14 + 'px) scale(.985)', filter: 'blur(6px)' }, { opacity: 1, transform: 'none', filter: 'blur(0)' }], { duration: 460, easing: EASE });
+      // entrada leve: só opacidade e deslocamento (sem blur, que travava no celular)
+      if (!reduz()) $('v-' + v).animate([{ opacity: 0, transform: 'translate3d(0,8px,0)' }, { opacity: 1, transform: 'none' }], { duration: 240, easing: 'cubic-bezier(.2,.7,.2,1)' });
     }
     if (reduz() || velha.hidden) return entrar();
-    var sai = velha.animate([{ opacity: 1, transform: 'none' }, { opacity: 0, transform: 'translateX(' + (-dir * 18) + 'px)', filter: 'blur(4px)' }], { duration: 150, easing: 'cubic-bezier(.4,0,1,1)', fill: 'forwards' });
+    var sai = velha.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 90, easing: 'linear', fill: 'forwards' });
     sai.onfinish = function () { entrar(); sai.cancel(); };
   }
   document.addEventListener('click', function (e) {
