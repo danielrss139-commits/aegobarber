@@ -10,7 +10,7 @@ window.LOJA = {
   nomeLoja: 'Sua Barbearia',
   nomeCurto: 'Sua Barbearia',
   slogan: 'Marque seu horário em um minuto.',
-  logo: '',                     // sem logo: usa o monograma "BM"
+  logo: 'img/aego-escudo.png',   // logo AEGO (escudo minimalista)
   monograma: '',
   corDestaque: '#151515',
   fundo: { imagem: '', escurecer: 0.55 },

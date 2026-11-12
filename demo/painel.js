@@ -243,7 +243,7 @@
   function renderTop() {
     var d = new Date();
     $('topDate').innerHTML = esc(U.DIAS3[d.getDay()]) + '<b>' + d.getDate() + ' ' + U.MESES3[d.getMonth()] + '</b>';
-    var h = d.getHours(); $('topG').textContent = (h < 5 ? 'Boa noite' : h < 12 ? 'Bom dia' : h < 18 ? 'Boa tarde' : 'Boa noite') + ' · ' + LJ.nome;
+    var h = d.getHours(); $('topG').textContent = (h < 5 ? 'Boa noite' : h < 12 ? 'Bom dia' : h < 18 ? 'Boa tarde' : 'Boa noite');
     $('topN').textContent = TITULOS[st.view] || '';
   }
   function renderTudo(animar) {
