@@ -827,3 +827,14 @@ body::before, body::after { filter: none !important; will-change: transform; }
   .pg-cliente .vitrine .vt-bg, .pg-cliente .vt-fundo { max-width: 100%; }
   .pg-cliente .bar { left: auto !important; right: max(40px, calc((100vw - 1180px) / 2 + 40px)) !important; width: 540px; max-width: 540px; margin: 0 !important; }
 }
+
+/* ===== v15: ícones de serviço viram ilustrações (mesmo traço das fotos do site) ===== */
+img.ico-foto { display: block; object-fit: cover; object-position: 50% 30%; background: #fafaf8; stroke: none; filter: none; }
+.mini-ico img.ico-foto, .svc-ico img.ico-foto, .thumb img.ico-foto { width: 100% !important; height: 100% !important; border-radius: inherit; }
+.mini-ico:has(img.ico-foto), .svc-ico:has(img.ico-foto) { padding: 0; overflow: hidden; background: #fafaf8; }
+.ico-grade { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.ico-b { padding: 6px 6px 10px; }
+.ico-b img.ico-foto { width: 100% !important; height: auto !important; aspect-ratio: 16 / 10; border-radius: 12px; }
+.ico-b.is-on img.ico-foto { outline: 2px solid #fff; }
+.foto-ico img.ico-foto { width: 100%; height: auto; aspect-ratio: 16 / 10; border-radius: 18px; }
+html[data-theme="dark"] img.ico-foto { filter: invert(.92) hue-rotate(180deg); }

@@ -163,7 +163,7 @@
   function extraServico(s) {   // descrição e foto do loja.config.js (pelo id ou nome)
     var c = loja.servicos.filter(function (x) { return x.id === s.id; })[0] ||
       loja.servicos.filter(function (x) { return x.nome.toLowerCase() === String(s.nome || '').toLowerCase(); })[0] || {};
-    return { descricao: c.descricao || '', foto: c.foto || '' };
+    return { descricao: c.descricao || '', foto: c.foto || (PK && PK.foto ? PK.foto(iconeDe(s)) : '') };
   }
 
   /* ---------- cabeçalho da página (título, descrição, cor) ---------- */
