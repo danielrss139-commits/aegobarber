@@ -52,12 +52,12 @@
   </section>
 
   <section class="step gl rise" style="--i:4" id="s1" aria-labelledby="t1">
-    <div class="step-head"><span class="step-dot" aria-hidden="true"></span><h2 class="step-title" id="t1">Serviço</h2></div>
+    <div class="step-head" data-rot="Serviço"><span class="step-dot" aria-hidden="true"></span><h2 class="step-title" id="t1">Serviço</h2></div>
     <ul class="list" id="servicos" role="radiogroup" aria-labelledby="t1"></ul>
   </section>
 
   <section class="step gl is-locked rise" style="--i:5" id="s2" aria-labelledby="t2">
-    <div class="step-head"><span class="step-dot" aria-hidden="true"></span><h2 class="step-title" id="t2">Dia</h2><span class="step-note" id="mes"></span></div>
+    <div class="step-head" data-rot="Dia"><span class="step-dot" aria-hidden="true"></span><h2 class="step-title" id="t2">Dia</h2><span class="step-note" id="mes"></span></div>
     <div class="chips" id="dias" role="radiogroup" aria-labelledby="t2"></div>
     <button type="button" class="btn opt cal-abrir hidden" id="calAbrir" aria-haspopup="dialog" aria-controls="cal">
       <svg viewBox="0 0 18 18" aria-hidden="true"><path d="M3 5.2h12v10H3zM3 8h12M6.2 2.8v3M11.8 2.8v3"/></svg>
@@ -65,13 +65,13 @@
   </section>
 
   <section class="step gl is-locked rise" style="--i:6" id="s3" aria-labelledby="t3">
-    <div class="step-head"><span class="step-dot" aria-hidden="true"></span><h2 class="step-title" id="t3">Horário</h2><span class="step-note" id="nlivres"></span></div>
+    <div class="step-head" data-rot="Horário"><span class="step-dot" aria-hidden="true"></span><h2 class="step-title" id="t3">Horário</h2><span class="step-note" id="nlivres"></span></div>
     <p class="msg hidden" id="msg-horario" role="alert"></p>
     <div id="horarios"><p class="muted small">Escolha o serviço e o dia para ver os horários livres.</p></div>
   </section>
 
   <section class="step gl is-locked rise" style="--i:7" id="s4" aria-labelledby="t4">
-    <div class="step-head"><span class="step-dot" aria-hidden="true"></span><h2 class="step-title" id="t4">Seus dados</h2></div>
+    <div class="step-head" data-rot="Seus dados"><span class="step-dot" aria-hidden="true"></span><h2 class="step-title" id="t4">Seus dados</h2></div>
     <label class="field" id="f-nome">
       <span class="field-label">Nome</span>
       <input class="input" id="nome" type="text" autocomplete="name" autocapitalize="words" placeholder="Como prefere ser chamado" maxlength="60" minlength="2">
@@ -99,13 +99,13 @@
       </div>
     </div>
     <div class="vt-stack">
-      <div class="vt-stack-h"><span class="eyebrow">Usamos e recomendamos</span><h2>Para o corte<br>durar até a próxima</h2></div>
+      <div class="vt-stack-h" data-rot="Produtos"><span class="eyebrow">Usamos e recomendamos</span><h2>Para o corte<br>durar até a próxima</h2></div>
       <div id="vtCards" class="vt-trilho"></div>
     </div>
   </section>
 
   <section class="step gl av-sec" id="avaliacoes" aria-labelledby="tav">
-    <div class="step-head"><h2 class="step-title" id="tav">Avaliações</h2><span class="step-note" id="av-media"></span></div>
+    <div class="step-head" data-rot="Avaliações"><h2 class="step-title" id="tav">Avaliações</h2><span class="step-note" id="av-media"></span></div>
     <ul class="av-lista" id="av-lista"></ul>
     <form class="av-form" id="av-form" novalidate>
       <span class="field-label">Deixe sua avaliação</span>
