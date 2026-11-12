@@ -714,34 +714,50 @@ html[data-theme="dark"] .foto-ico .ico, html[data-theme="dark"] .svc-ico .ico, h
 .hero-nome { font-size: clamp(22px, 7.4vw, 30px) !important; letter-spacing: .1em !important; padding: 0 .1em .08em !important; line-height: 1.2 !important; max-width: 100%; }
 
 /* ======================================================================
-   v10 · Modelo branco minimalista (site do cliente) · mesmas fontes
-   Inspirado no layout editorial: seções numeradas, linhas finas, botões retos
+   v11 · Branco minimalista com vidro de iPhone (site do cliente) · mesmas fontes
    ====================================================================== */
-body.pg-cliente { background: #fafaf8 !important; counter-reset: secao; }
-html:has(body.pg-cliente) { background: #fafaf8 !important; }
-body.pg-cliente::before, body.pg-cliente::after, .pg-cliente .fundo-luz, .pg-cliente .fundo-luz2 { display: none !important; }
-.pg-cliente .gl, .pg-cliente .lg:not(.vt-seta), .pg-cliente .vt-card, .pg-cliente .vt-info, .pg-cliente .bar {
-  background: #fff !important; border: 1px solid rgba(20,20,20,.08) !important; border-radius: 14px !important;
-  box-shadow: 0 1px 2px rgba(0,0,0,.03) !important; -webkit-backdrop-filter: none !important; backdrop-filter: none !important;
+body.pg-cliente { background: #f6f5f2 !important; }
+html:has(body.pg-cliente) { background: #f6f5f2 !important; }
+body.pg-cliente::before, .pg-cliente .fundo-luz2 { display: none !important; }
+/* luz suave atrás do vidro (sem animação, não pesa) */
+body.pg-cliente::after { display: block !important; content: ""; position: fixed; inset: 0; z-index: -1; pointer-events: none;
+  background: radial-gradient(60% 40% at 0% 30%, rgba(214,196,170,.45), transparent 70%), radial-gradient(55% 35% at 100% 75%, rgba(220,206,186,.5), transparent 70%); }
+/* vidro iPhone: branco translúcido, desfoque, borda clara fina */
+.pg-cliente .gl, .pg-cliente .vt-card, .pg-cliente .vt-info, .pg-cliente .bar, .pg-cliente .chip, .pg-cliente .opt, .pg-cliente .ag {
+  background: rgba(255,255,255,.58) !important; border: 1px solid rgba(255,255,255,.85) !important; border-radius: 22px !important;
+  -webkit-backdrop-filter: blur(22px) saturate(180%) !important; backdrop-filter: blur(22px) saturate(180%) !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.9), 0 8px 24px -14px rgba(40,30,20,.22) !important;
 }
-.pg-cliente .gl::before, .pg-cliente .gl::after, .pg-cliente .lg::before, .pg-cliente .lg::after { display: none !important; }
-.pg-cliente .bar { border-radius: 14px 14px 0 0 !important; border-width: 1px 0 0 !important; }
-/* títulos de seção numerados: 01 —— SERVIÇO */
-.pg-cliente .step, .pg-cliente .vt-stack-h { counter-increment: secao; }
-.pg-cliente .step-head { flex-wrap: wrap; }
-.pg-cliente .step-head[data-rot]::before, .pg-cliente .vt-stack-h[data-rot]::before {
-  content: counter(secao, decimal-leading-zero) "  ——  " attr(data-rot);
-  flex-basis: 100%; display: block; margin-bottom: 6px; font-size: 11px; letter-spacing: .22em; text-transform: uppercase; color: #9b8060; white-space: pre;
-}
+.pg-cliente .chip, .pg-cliente .opt, .pg-cliente .ag { border-radius: 16px !important; -webkit-backdrop-filter: none !important; backdrop-filter: none !important; background: rgba(255,255,255,.7) !important; }
+.pg-cliente .gl::before, .pg-cliente .gl::after { display: none !important; }
+.pg-cliente .bar { border-radius: 24px !important; }
 .pg-cliente .step-dot { display: none !important; }
-.pg-cliente .step-title { font-size: 26px !important; letter-spacing: -.02em !important; }
-/* botões retos, sem brilho */
-.pg-cliente .btn { border-radius: 6px !important; box-shadow: none !important; letter-spacing: .06em; text-transform: uppercase; font-size: 13.5px !important; }
+.pg-cliente .btn { border-radius: 999px !important; box-shadow: none !important; }
 .pg-cliente .btn-primary { background: #151515 !important; color: #fff !important; }
-.pg-cliente .chip, .pg-cliente .opt, .pg-cliente .ag, .pg-cliente .tg { border-radius: 8px !important; box-shadow: none !important; background: #fff !important; }
-/* ícones: vidro discreto, só contorno */
-.pg-cliente .foto-ico, .pg-cliente .vt-seta { background: #fff !important; box-shadow: 0 1px 2px rgba(0,0,0,.05) !important; border: 1px solid rgba(20,20,20,.1) !important; }
-.pg-cliente .foto-ico::after, .pg-cliente .vt-seta::after { display: none; }
-.pg-cliente .vt-card-img { background: #f3f2ef !important; border-radius: 10px !important; }
+.pg-cliente .vt-card-img { background: rgba(255,255,255,.55) !important; border-radius: 16px !important; }
 .pg-cliente .vt-big span { -webkit-text-stroke: 1px rgba(20,20,20,.06); color: transparent; }
-.pg-cliente .capa::after { background: linear-gradient(180deg, rgba(0,0,0,.22) 0%, rgba(0,0,0,0) 24%, rgba(250,250,248,0) 60%, #fafaf8 100%) !important; }
+/* topo: frase e slogan juntos, mesma família, proporcionais */
+.pg-cliente .capa { margin-bottom: 0 !important; }
+.pg-cliente .capa::after { background: linear-gradient(180deg, rgba(0,0,0,.22) 0%, rgba(0,0,0,0) 24%, rgba(246,245,242,0) 58%, #f6f5f2 100%) !important; }
+.pg-cliente .capa-frase { left: 0 !important; right: 0 !important; bottom: 18px !important; text-align: center !important; font-size: clamp(26px, 7.6vw, 32px) !important; line-height: 1.12 !important; }
+.pg-cliente .hero { gap: 6px !important; }
+.pg-cliente .hero-lede { margin: 2px auto 8px !important; text-align: center; font-size: 16px !important; color: #6b6760 !important; }
+/* animações leves nas fotos e no site (só transform/opacity) */
+@keyframes aegoCapa { from { transform: scale(1.12); opacity: .6; } to { transform: scale(1); opacity: 1; } }
+@keyframes aegoFoto { from { opacity: 0; transform: scale(1.08); } to { opacity: 1; transform: none; } }
+@keyframes aegoSobe { from { opacity: 0; transform: translate3d(0, 24px, 0); } to { opacity: 1; transform: none; } }
+.pg-cliente .capa-img { animation: aegoCapa 1.6s cubic-bezier(.2,.7,.2,1) both; transform-origin: center 35%; }
+@supports (animation-timeline: view()) {
+  .pg-cliente .foto-fig img, .pg-cliente .vt-card-img img, .pg-cliente .final-img { animation: aegoFoto linear both; animation-timeline: view(); animation-range: entry 0% cover 35%; }
+  .pg-cliente .step, .pg-cliente .av-sec, .pg-cliente .vt-card, .pg-cliente .foot { animation: aegoSobe linear both !important; animation-timeline: view() !important; animation-range: entry 0% entry 55% !important; }
+  .pg-cliente .vt-trilho .vt-card { animation-timeline: view(inline) !important; }
+}
+.pg-cliente .opt, .pg-cliente .vt-card, .pg-cliente .chip { transition: transform .25s cubic-bezier(.2,.7,.2,1); }
+.pg-cliente .opt:active, .pg-cliente .vt-card:active, .pg-cliente .chip:active { transform: scale(.97); }
+@media (prefers-reduced-motion: reduce) { .pg-cliente .capa-img, .pg-cliente .foto-fig img, .pg-cliente .vt-card-img img, .pg-cliente .final-img, .pg-cliente .step, .pg-cliente .av-sec, .pg-cliente .vt-card, .pg-cliente .foot { animation: none !important; opacity: 1 !important; } }
+.pg-cliente .capa-frase { z-index: 2 !important; bottom: 10px !important; color: #151515 !important; }
+.pg-cliente .hero-nome:empty { display: none !important; }
+.pg-cliente .hero-lede { margin-top: 4px !important; }
+.pg-cliente .vt-stack-h { text-align: center; }
+.pg-cliente .capa { -webkit-mask-image: none !important; mask-image: none !important; }
+.pg-cliente .hero-nome { opacity: 1 !important; animation: none !important; background: none !important; -webkit-text-fill-color: #151515 !important; color: #151515 !important; font-size: 15px !important; letter-spacing: .32em !important; margin-top: 6px; }
