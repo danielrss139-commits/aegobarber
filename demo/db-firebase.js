@@ -1,3 +1,5 @@
+function _min(v){if(typeof v==='string'&&v.indexOf(':')>0){var p=v.split(':');return (+p[0]||0)*60+(+p[1]||0);}return Number(v)||0;}
+function _cmpAg(a,b){return a.data===b.data?(_min(a.inicio)-_min(b.inicio))||((a.criadoEm||0)-(b.criadoEm||0)):(a.data<b.data?-1:1);}
 /* =====================================================================
    Camada de dados de PRODUÇÃO (Firebase) — modelo de barbearia
    ---------------------------------------------------------------------
@@ -364,7 +366,7 @@
             : c.F.query(col, c.F.where('data', '>=', addDias(hoje(), -JANELA_PASSADO)));
           return c.F.getDocs(q);
         }).then(function (qs) {
-          return qs.docs.map(deAg).sort(function (a, b) { return a.data === b.data ? a.inicio - b.inicio : (a.data < b.data ? -1 : 1); });
+          return qs.docs.map(deAg).sort(_cmpAg);
         });
       },
 

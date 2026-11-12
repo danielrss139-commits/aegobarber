@@ -116,7 +116,7 @@
   function svg(id, cls, titulo) {
     var x = porId[id] || porId.estrela;
     // chips pequenos continuam com o traço; o resto mostra a ilustração
-    if (!/ico-chip|ico-linha/.test(cls || '')) return '<img class="ico ico-foto ' + (cls || '') + '" src="' + foto(x.id) + '" alt="' + (titulo ? String(titulo).replace(/"/g, '') : '') + '" width="800" height="500" loading="lazy" decoding="async">';
+    if (!/ico-chip|ico-linha/.test(cls || '')) return '<img class="ico ico-foto ' + (cls || '') + '" src="' + foto(x.id) + '" style="--dk:url(' + foto(x.id).replace('img/svc/', 'img/svc/escuro/') + ')" alt="' + (titulo ? String(titulo).replace(/"/g, '') : '') + '" width="800" height="500" loading="lazy" decoding="async">';
     return '<svg class="ico ' + (cls || '') + '" viewBox="0 0 24 24"' + (titulo ? ' role="img" aria-label="' + String(titulo).replace(/"/g, '') + '"' : ' aria-hidden="true"') + '>' + x.d + '</svg>';
   }
   w.AEGO_ICONES = { lista: I, porId: porId, sugerir: sugerir, svg: svg, foto: foto, existe: function (id) { return !!porId[id]; } };

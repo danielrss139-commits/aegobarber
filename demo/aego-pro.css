@@ -837,9 +837,9 @@ img.ico-foto { display: block; object-fit: cover; object-position: 50% 30%; back
 .ico-b img.ico-foto { width: 100% !important; height: auto !important; aspect-ratio: 16 / 10; border-radius: 12px; }
 .ico-b.is-on img.ico-foto { outline: 2px solid #fff; }
 .foto-ico img.ico-foto { width: 100%; height: auto; aspect-ratio: 16 / 10; border-radius: 18px; }
-/* modo escuro: a ilustração mantém as cores originais (cabelo preto, pele clara) num cartão claro levemente apagado */
-html[data-theme="dark"] img.ico-foto { filter: brightness(.9) contrast(1.05) !important; background: #ecebe6; }
-html[data-theme="dark"] .mini-ico:has(img.ico-foto), html[data-theme="dark"] .svc-ico:has(img.ico-foto) { background: #ecebe6 !important; border-color: rgba(255,255,255,.18) !important; }
+/* modo escuro: versão em giz sobre preto (traço claro, cabelo grafite) */
+html[data-theme="dark"] img.ico-foto { content: var(--dk); background: #161514; filter: none !important; }
+html[data-theme="dark"] .mini-ico:has(img.ico-foto), html[data-theme="dark"] .svc-ico:has(img.ico-foto) { background: #161514 !important; border-color: rgba(255,255,255,.12) !important; }
 
 /* ===== v16: refino (nome fixo, WhatsApp em pílula, saldo, Manutenção e Sistema) ===== */
 /* nome da marca: estático, só uma entrada suave de 0,5 s */
@@ -930,3 +930,21 @@ html:not([data-theme="dark"]) body.pro { background: #e4ded4 !important; }
     box-shadow: inset 0 1px 0 rgba(255,255,255,.95), 0 12px 28px -16px rgba(80,60,35,.28) !important; }
 }
 html:not([data-theme="dark"]) .pro .fundo::after { background: linear-gradient(115deg, transparent 36%, rgba(168,128,82,.22) 45%, rgba(255,255,255,.7) 50%, rgba(168,128,82,.22) 55%, transparent 64%) !important; }
+
+/* ===== v19: brilho que passa pelos cartões no modo claro (igual ao reflexo do escuro) ===== */
+html:not([data-theme="dark"]) .pro .lg { position: relative; overflow: clip; }
+html:not([data-theme="dark"]) .pro .lg::before { content: ""; position: absolute; top: -20%; bottom: -20%; left: 0; width: 60%; pointer-events: none; z-index: 0;
+  background: linear-gradient(105deg, transparent 10%, rgba(255,255,255,.9) 38%, rgba(214,178,126,.42) 50%, rgba(255,255,255,.9) 62%, transparent 90%); opacity: 1; border-radius: 0; mix-blend-mode: multiply;
+  transform: translate3d(-120%,0,0) skewX(-12deg); will-change: transform; animation: aegoBrilho 7s cubic-bezier(.45,0,.2,1) infinite; }
+html:not([data-theme="dark"]) .pro .lg > * { position: relative; z-index: 1; }
+@keyframes aegoBrilho { 0%, 55% { transform: translate3d(-120%,0,0) skewX(-12deg); } 100% { transform: translate3d(260%,0,0) skewX(-12deg); } }
+@media (prefers-reduced-motion: reduce) { html:not([data-theme="dark"]) .pro .lg::before { animation: none; display: none; } }
+
+/* ===== v19: destaque do próximo cliente ===== */
+.ag.is-prox { box-shadow: inset 3px 0 0 var(--warm2, #b88a4e), 0 6px 18px -10px rgba(184,138,78,.55); border-color: rgba(184,138,78,.45) !important; background-image: linear-gradient(90deg, rgba(184,138,78,.10), transparent 60%); }
+.ag.is-prox .ag-prox { color: var(--warm2, #b88a4e); font-weight: 600; }
+.ag.is-prox .ag-name { font-weight: 600; }
+.mini.is-prox { border-radius: 14px; background: linear-gradient(90deg, rgba(184,138,78,.12), transparent 70%); box-shadow: inset 3px 0 0 var(--warm2, #b88a4e); padding-left: 8px; }
+.mini.is-prox .mini-h small { color: var(--warm2, #b88a4e); font-weight: 600; text-transform: uppercase; letter-spacing: .08em; }
+.mini-dia { list-style: none; font-size: 10px; letter-spacing: .16em; text-transform: uppercase; color: var(--muted); padding: 10px 0 2px; border: 0 !important; }
+.mini-dia:first-child { padding-top: 0; }

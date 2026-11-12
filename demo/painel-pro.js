@@ -99,13 +99,18 @@
     }).catch(P.falhaLeitura);
   };
 
+  function _min(v){if(typeof v==='string'&&v.indexOf(':')>0){var p=v.split(':');return (+p[0]||0)*60+(+p[1]||0);}return Number(v)||0;}
+  function _cmpAg(a,b){return a.data===b.data?(_min(a.inicio)-_min(b.inicio))||((a.criadoEm||0)-(b.criadoEm||0)):(a.data<b.data?-1:1);}
   function renderProx(D) {
     var h = U.hoje(), d = new Date(), agora = d.getHours() * 60 + d.getMinutes(), lim = U.addDias(h, 6);
-    var l = D.ags.filter(function (a) { return a.status === 'marcado' && a.data <= lim && (a.data > h || (a.data === h && a.fim > agora)); }).slice(0, 5);
+    var l = D.ags.filter(function (a) { return a.status === 'marcado' && a.data <= lim && (a.data > h || (a.data === h && a.fim > agora)); }).sort(_cmpAg).slice(0, 5);
     if (!l.length) { $('proxLista').innerHTML = '<li class="mini-vazio">Nenhum horário marcado para os próximos dias. Que tal divulgar o link de agendamento no seu status?</li>'; return; }
+    var diaAnt = null;
     $('proxLista').innerHTML = l.map(function (a, i) {
+      var sep = '';
+      if (a.data !== diaAnt) { diaAnt = a.data; sep = '<li class="mini-dia">' + esc(a.data === h ? 'Hoje' : a.data === U.addDias(h, 1) ? 'Amanhã' : U.DIAS3[U.parseISO(a.data).getDay()] + ' ' + U.parseISO(a.data).getDate()) + '</li>'; }
       var quando = a.data === h ? (a.inicio <= agora ? 'agora' : 'hoje') : a.data === U.addDias(h, 1) ? 'amanhã' : U.DIAS3[U.parseISO(a.data).getDay()];
-      return '<li class="mini' + (i === 0 ? ' is-prox' : '') + '"><span class="mini-h num">' + esc(U.hhmm(a.inicio)) + '<small>' + esc(quando) + '</small></span>' +
+      return sep + '<li class="mini' + (i === 0 ? ' is-prox' : '') + '"><span class="mini-h num">' + esc(U.hhmm(a.inicio)) + '<small>' + esc(i === 0 ? (quando === 'agora' ? 'agora' : 'próximo') : quando) + '</small></span>' +
         '<span class="mini-ico">' + JC.icone({ id: a.servicoId, nome: a.servicoNome }) + '</span>' +
         '<span class="mini-m"><b>' + esc(a.nome) + '</b><small>' + esc(a.servicoNome) + ' · ' + esc(U.brlCurto(a.preco)) + '</small></span>' +
         '<a class="ibtn ibtn-sm" href="' + esc(P.zapLink(a)) + '" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp de ' + esc(a.nome) + '">' + svg(ICO.zap, '0 0 24 24') + '</a></li>';

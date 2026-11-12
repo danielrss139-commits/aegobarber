@@ -1,3 +1,4 @@
+function _hm(v){if(typeof v==='string'){var p=v.split(':');return (+p[0]||0)*60+(+p[1]||0);}return Number(v)||0;}
 /* Painel do barbeiro (painel.html): Firebase Auth + Firestore (ou dados locais no modo demonstração).
    Nada de dado é mostrado antes de o login ser confirmado como barbeiro (admins/{uid}).
    Todo texto vindo do banco é escapado (esc) ou posto com textContent. */
@@ -302,7 +303,7 @@
       var todos = r[0], cfg = r[1], anim = st.animar; st.animar = false;
       if (st.entrada) { st.statsZero = true; st.entrada = false; }
       renderHojeStats(todos, cfg);
-      var ags = todos.filter(function (a) { return a.data === st.dia; });
+      var ags = todos.filter(function (a) { return a.data === st.dia; }).sort(function (a, b) { return _hm(a.inicio) - _hm(b.inicio) || (a.criadoEm || 0) - (b.criadoEm || 0); });
       var validos = ags.filter(function (a) { return a.status !== 'faltou' && a.status !== 'cancelado'; });
       var previsto = validos.reduce(function (s, a) { return s + Number(a.preco || 0); }, 0);
       $('agSum').textContent = ags.length
@@ -321,8 +322,8 @@
       var ehHoje = st.dia === U.hoje(), agora = minAgora(), proxId = null, nowAt = -1;
       if (ehHoje) {
         for (var k = 0; k < ags.length; k++) {
-          if (ags[k].status === 'marcado' && ags[k].inicio > agora && !proxId) proxId = ags[k].id;
-          if (nowAt < 0 && ags[k].inicio > agora) nowAt = k;
+          if (ags[k].status === 'marcado' && _hm(ags[k].inicio) + Number(ags[k].duracao || 0) > agora && !proxId) proxId = ags[k].id;
+          if (nowAt < 0 && _hm(ags[k].inicio) > agora) nowAt = k;
         }
         if (nowAt < 0) nowAt = ags.length;
       }
@@ -335,7 +336,7 @@
           : '<a class="btn btn-ghost btn-sm" href="' + esc(zapLink(a)) + '" target="_blank" rel="noopener noreferrer">WhatsApp</a>' +
             '<button class="btn btn-primary btn-sm" data-a="atendido" data-id="' + esc(a.id) + '" type="button">Atendido</button>' +
             '<button class="btn btn-text btn-sm" data-a="faltou" data-id="' + esc(a.id) + '" type="button">Não veio</button>';
-        var cls = 'ag' + (anim ? ' ag-in' : '') + (feito ? ' is-feito' : '') + (faltou ? ' is-faltou' : '') +
+        var cls = 'ag' + (a.id === proxId ? ' is-prox' : '') + (anim ? ' ag-in' : '') + (feito ? ' is-feito' : '') + (faltou ? ' is-faltou' : '') +
           (st.flash[a.id] ? ' is-flash' : '') + (st.just[a.id] ? ' just' : '');
         return (i === nowAt ? nowLi : '') + '<li class="' + cls + '" data-id="' + esc(a.id) + '" style="--i:' + Math.min(i, 7) + '">' +
           '<div class="ag-top"><div class="ag-time"><span class="num">' + esc(U.hhmm(a.inicio)) + '</span>' + (feito ? OK_SVG : '<span class="small">até ' + esc(U.hhmm(a.fim)) + '</span>') + '</div>' +
@@ -502,7 +503,7 @@
       itens.forEach(function (it) { (dias[it.x.data] = dias[it.x.data] || []).push(it); });
       function ri() { var c = anim ? ' row-in" style="--i:' + Math.min(n++, 12) : ''; return c + '"'; }
       $('finLista').innerHTML = Object.keys(dias).sort().reverse().map(function (d) {
-        var l = dias[d].sort(function (a, b) { return (b.x.hora || '').localeCompare(a.x.hora || ''); });
+        var l = dias[d].sort(function (a, b) { return _hm(b.x.hora) - _hm(a.x.hora) || (b.x.criadoEm || 0) - (a.x.criadoEm || 0); });
         var tot = l.reduce(function (s, it) { return s + (it.t === 'cortes' ? 1 : -1) * Number(it.x.valor || 0); }, 0);
         return '<div class="grp"><div class="grp-h' + ri() + '><span class="eyebrow">' + (d === U.hoje() ? 'Hoje · ' : '') + diaCurto(d) + '</span>' +
           '<span class="num">' + (tot < 0 ? '− ' : '') + U.brlCurto(Math.abs(tot)) + '</span></div><ul class="list">' +
