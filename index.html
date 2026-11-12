@@ -27,12 +27,12 @@ body::before{content:"";position:fixed;inset:-15%;z-index:-1;pointer-events:none
 .capa::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.3),rgba(0,0,0,0) 30%)}
 .capa img.logo{position:absolute;z-index:1;top:22px;left:50%;transform:translateX(-50%);width:72px;filter:drop-shadow(0 2px 8px rgba(0,0,0,.25))}
 main{position:relative;max-width:520px;margin:-90px auto 0;padding:0 22px calc(40px + env(safe-area-inset-bottom));text-align:center}
-:root{--marca-fade-a:#171717;--marca-fade-b:#9b8b78;--marca-fade-c:#d2c0a7}
-html[data-theme="dark"]{--marca-fade-a:#f4f0e9;--marca-fade-b:#b99b78;--marca-fade-c:#fff}
-@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--marca-fade-a:#f4f0e9;--marca-fade-b:#b99b78;--marca-fade-c:#fff}}
-.marca{font-family:"Josefin",sans-serif;font-weight:300;font-size:14px;letter-spacing:.42em;padding-left:.42em;text-transform:uppercase;color:var(--marca-fade-a);background:linear-gradient(105deg,var(--marca-fade-a) 0%,var(--marca-fade-b) 42%,var(--marca-fade-c) 52%,var(--marca-fade-b) 62%,var(--marca-fade-a) 100%);background-size:220% 100%;background-position:100% 50%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:sobe .8s .3s both,marcaFade 6s ease-in-out .8s infinite}
+:root{--marca-fade-a:#171717;--marca-fade-b:#92734f;--marca-fade-c:#d8c09d}
+html[data-theme="dark"]{--marca-fade-a:#f7f4ee;--marca-fade-b:#c6a477;--marca-fade-c:#fff}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--marca-fade-a:#f7f4ee;--marca-fade-b:#c6a477;--marca-fade-c:#fff}}
+.marca{display:inline-block;position:relative;font-family:"Josefin",sans-serif;font-weight:400;font-size:14px;letter-spacing:.42em;padding-left:.42em;text-transform:uppercase;color:var(--marca-fade-a);background:linear-gradient(110deg,var(--marca-fade-a) 0%,var(--marca-fade-b) 34%,var(--marca-fade-c) 50%,var(--marca-fade-b) 66%,var(--marca-fade-a) 100%);background-size:260% 100%;background-position:100% 50%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:sobe .8s .3s both,marcaFade 4.8s ease-in-out .8s infinite}
 @keyframes marcaFade{0%,100%{background-position:100% 50%}50%{background-position:0% 50%}}
-@media(prefers-reduced-motion:reduce){.marca{animation:none!important;background-position:50% 50%}}
+@media(prefers-reduced-motion:reduce){.marca{animation:none!important;background-position:50% 50%;-webkit-text-fill-color:transparent}}
 h1{font-family:"Playfair",Georgia,serif;font-weight:400;font-size:40px;line-height:1.04;letter-spacing:-.035em;margin:14px 0 14px;animation:sobe .8s .45s both}
 h1 em{font-style:italic}
 .lede{color:#555;font-size:16.5px;line-height:1.55;max-width:400px;margin:0 auto;animation:sobe .8s .6s both}
