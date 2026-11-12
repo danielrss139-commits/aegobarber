@@ -761,3 +761,8 @@ body.pg-cliente::after { display: block !important; content: ""; position: fixed
 .pg-cliente .vt-stack-h { text-align: center; }
 .pg-cliente .capa { -webkit-mask-image: none !important; mask-image: none !important; }
 .pg-cliente .hero-nome { opacity: 1 !important; animation: none !important; background: none !important; -webkit-text-fill-color: #151515 !important; color: #151515 !important; font-size: 15px !important; letter-spacing: .32em !important; margin-top: 6px; }
+/* vitrine sem botão "Ver em 3D": toque no cartão abre o produto; preço em destaque */
+.pg-cliente .vt-info { cursor: pointer; grid-template-columns: 1fr auto !important; }
+.pg-cliente .vt-card-f { justify-content: flex-start !important; }
+.pg-cliente .vt-preco-dest { display: inline-block; font-size: 26px !important; font-weight: 500 !important; letter-spacing: -.01em; color: #151515;
+  padding: 6px 14px; border-radius: 999px; background: rgba(255,255,255,.75); border: 1px solid rgba(20,20,20,.08); }

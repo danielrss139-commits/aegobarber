@@ -47,8 +47,7 @@
         '<div class="vt-card-b"><span class="pd-cat">' + esc([p.marca, p.categoria].filter(Boolean).join(' · ')) + '</span><h3>' + esc(p.nome) + '</h3>' +
         '<div class="pc-meta">' + (p.fixacao ? dots(p.fixacao) + '<span>fixação ' + FIX[p.fixacao] + '</span>' : '') + (p.brilho ? '<span>· brilho ' + esc(p.brilho.toLowerCase()) + '</span>' : '') + '</div>' +
         (p.descricao ? '<p>' + esc(p.descricao) + '</p>' : '') +
-        '<div class="vt-card-f"><b class="num">' + esc(U.brl(p.preco)) + '</b><button class="btn btn-primary" type="button" data-ver="' + esc(p.id) + '">' +
-        '<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 2.5l6.5 3.7v7.6L10 17.5l-6.5-3.7V6.2z"/><path d="M3.5 6.2L10 10l6.5-3.8M10 10v7.5"/></svg>' + (p.modelo3d ? 'Ver em 3D' : 'Detalhes') + '</button></div></div></article>';
+        '<div class="vt-card-f"><b class="num vt-preco-dest">' + esc(U.brl(p.preco)) + '</b></div></div></article>';
     }).join('');
     atual = -1;
     if (com3d.length) mostrar(0, true);
@@ -76,7 +75,8 @@
     info.innerHTML = '<span class="vt-cat">' + esc([p.marca, p.categoria].filter(Boolean).join(' · ')) + '</span>' +
       '<h3>' + esc(p.nome) + '</h3><span class="vt-preco num">' + esc(U.brlCurto(p.preco)) + '</span>' +
       '<span class="vt-meta">' + (p.fixacao ? dots(p.fixacao) : '') + (p.brilho ? '<span>' + esc(p.brilho) + '</span>' : '') + '</span>' +
-      '<button class="btn btn-primary" type="button" data-ver="' + esc(p.id) + '">Ver em 3D</button>';
+      '';
+    info.setAttribute('data-ver', p.id);
     if (!primeira && !calmo) { info.classList.remove('troca'); void info.offsetWidth; info.classList.add('troca'); }
     $('vtProg').querySelectorAll('i').forEach(function (x, k) { x.classList.toggle('on', k === i); });
     $('vtBig').style.transform = 'translate3d(' + (-(i / Math.max(1, n)) * 40) + '%,0,0)';
