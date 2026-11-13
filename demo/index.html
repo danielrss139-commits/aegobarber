@@ -31,6 +31,7 @@
 <script src="db-firebase.js" defer></script>
 <script src="db-demo.js" defer></script>
 <script src="agendar.js" defer></script>
+<script src="trilha.js" defer></script>
 <script src="avaliacoes.js" defer></script>
 <script src="produto3d.js" defer></script>
 <script src="loja-produtos.js" defer></script>
@@ -56,6 +57,7 @@
     <div class="marquee" id="marquee"><div class="marquee-track" id="mtrack"></div></div>
   </section>
 
+  <div class="trilha" id="trilha"><div class="trilha-linha" aria-hidden="true"><i id="trilhaFill"></i></div>
   <section class="step gl rise" style="--i:4" id="s1" aria-labelledby="t1">
     <div class="step-head"><span class="step-dot" aria-hidden="true"></span><h2 class="step-title" id="t1">Serviço</h2></div>
     <ul class="list" id="servicos" role="radiogroup" aria-labelledby="t1"></ul>
@@ -88,6 +90,7 @@
       <span class="field-hint">Só para a barbearia confirmar com você.</span>
     </label>
   </section>
+  </div>
 
   <!-- VITRINE: pomadas e produtos da casa (cadastrados no painel com IA) -->
   <section class="vitrine" id="vitrine" aria-labelledby="vtT" hidden>

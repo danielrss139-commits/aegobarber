@@ -976,3 +976,21 @@ html[data-theme="dark"] .pro h2,
 html[data-theme="dark"] .pro h3 { color: var(--text, #f1f0ed) !important; -webkit-text-fill-color: currentColor; }
 html[data-theme="dark"] .pro .nav .tab:not(.is-on) { color: var(--muted, #aaa8a2) !important; }
 html[data-theme="dark"] .pro .input::placeholder { color: var(--faint, #77756f) !important; }
+
+/* ===== v21: trilha das etapas no site do cliente (linha que preenche + números) ===== */
+.pg-cliente .trilha { position: relative; padding-left: 46px; }
+.pg-cliente .trilha-linha { position: absolute; left: 19px; top: 30px; bottom: 30px; width: 2px; border-radius: 2px; background: rgba(21,21,21,.10); overflow: hidden; }
+.pg-cliente .trilha-linha i { position: absolute; inset: 0; background: linear-gradient(#151515, #8a6a43); transform-origin: top; transform: scaleY(0); transition: transform .9s cubic-bezier(.22,1,.36,1); will-change: transform; }
+.pg-cliente .trilha .step { position: relative; overflow: visible !important; }
+.pg-cliente .trilha-n { position: absolute; left: -46px; top: 14px; width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; font-size: 13px; font-weight: 600; letter-spacing: .02em;
+  color: #9a968f; background: #f6f4f0; border: 2px solid #fff; box-shadow: 0 2px 8px rgba(0,0,0,.08); z-index: 2; transition: background .45s, color .45s, box-shadow .45s, transform .45s cubic-bezier(.22,1,.36,1); }
+.pg-cliente .step.is-passou .trilha-n { background: #151515; color: #fff; }
+.pg-cliente .step.is-atual .trilha-n { background: #151515; color: #fff; transform: scale(1.08); box-shadow: 0 0 0 0 rgba(21,21,21,.35), 0 6px 16px rgba(0,0,0,.18); }
+.pg-cliente .step.is-atual .trilha-n::after { content: ""; position: absolute; inset: -6px; border-radius: 50%; border: 2px solid rgba(138,106,67,.55); animation: trHalo 2.2s ease-out infinite; }
+@keyframes trHalo { 0% { transform: scale(.85); opacity: .9; } 100% { transform: scale(1.35); opacity: 0; } }
+.pg-cliente .step.is-atual { box-shadow: 0 10px 30px -14px rgba(0,0,0,.25), inset 0 0 0 1px rgba(138,106,67,.35) !important; }
+.pg-cliente .trilha .step.tr-esconde { opacity: 0; transform: translate3d(28px, 14px, 0); }
+.pg-cliente .trilha .step.tr-entra { animation: trEntra .7s cubic-bezier(.22,1,.36,1) both; }
+@keyframes trEntra { from { opacity: 0; transform: translate3d(28px, 14px, 0); } to { opacity: 1; transform: none; } }
+@media (max-width: 380px) { .pg-cliente .trilha { padding-left: 40px; } .pg-cliente .trilha-n { left: -40px; width: 34px; height: 34px; font-size: 12px; } .pg-cliente .trilha-linha { left: 16px; } }
+@media (prefers-reduced-motion: reduce) { .pg-cliente .step.is-atual .trilha-n::after { animation: none; } .pg-cliente .trilha-linha i { transition: none; } }
