@@ -948,3 +948,31 @@ html:not([data-theme="dark"]) .pro .lg > * { position: relative; z-index: 1; }
 .mini.is-prox .mini-h small { color: var(--warm2, #b88a4e); font-weight: 600; text-transform: uppercase; letter-spacing: .08em; }
 .mini-dia { list-style: none; font-size: 10px; letter-spacing: .16em; text-transform: uppercase; color: var(--muted); padding: 10px 0 2px; border: 0 !important; }
 .mini-dia:first-child { padding-top: 0; }
+
+
+/* ===== v20: modo escuro sem texto preto no painel ===== */
+html[data-theme="dark"] .pro .ag-time .num,
+html[data-theme="dark"] .pro .bc.is-hoje .bl,
+html[data-theme="dark"] .pro .bc.is-sel .bl,
+html[data-theme="dark"] .pro .capa-frase,
+html[data-theme="dark"] .pro .chart-v,
+html[data-theme="dark"] .pro .dayswitch-t,
+html[data-theme="dark"] .pro .empty strong,
+html[data-theme="dark"] .pro .foot-nome,
+html[data-theme="dark"] .pro .foto-cap-n,
+html[data-theme="dark"] .pro .hero-nome,
+html[data-theme="dark"] .pro .hs-n,
+html[data-theme="dark"] .pro .intro-nome,
+html[data-theme="dark"] .pro .lanc .row-end,
+html[data-theme="dark"] .pro .rgc b,
+html[data-theme="dark"] .pro .saldo .big,
+html[data-theme="dark"] .pro .step-title,
+html[data-theme="dark"] .pro .top-date b,
+html[data-theme="dark"] .pro .top-n,
+html[data-theme="dark"] .pro .trust li b,
+html[data-theme="dark"] .pro .vt-big,
+html[data-theme="dark"] .pro h1,
+html[data-theme="dark"] .pro h2,
+html[data-theme="dark"] .pro h3 { color: var(--text, #f1f0ed) !important; -webkit-text-fill-color: currentColor; }
+html[data-theme="dark"] .pro .nav .tab:not(.is-on) { color: var(--muted, #aaa8a2) !important; }
+html[data-theme="dark"] .pro .input::placeholder { color: var(--faint, #77756f) !important; }
