@@ -994,3 +994,9 @@ html[data-theme="dark"] .pro .input::placeholder { color: var(--faint, #77756f) 
 @keyframes trEntra { from { opacity: 0; transform: translate3d(28px, 14px, 0); } to { opacity: 1; transform: none; } }
 @media (max-width: 380px) { .pg-cliente .trilha { padding-left: 40px; } .pg-cliente .trilha-n { left: -40px; width: 34px; height: 34px; font-size: 12px; } .pg-cliente .trilha-linha { left: 16px; } }
 @media (prefers-reduced-motion: reduce) { .pg-cliente .step.is-atual .trilha-n::after { animation: none; } .pg-cliente .trilha-linha i { transition: none; } }
+
+/* ===== v22: múltipla seleção de serviços (marca vira check) ===== */
+.pg-cliente .svc[role="checkbox"] .row-mark { border-radius: 8px; }
+.pg-cliente .svc[role="checkbox"] .row-mark::after { width: 14px; height: 14px; border-radius: 0; background: none; border: solid #fff; border-width: 0 2.4px 2.4px 0; width: 6px; height: 11px; transform: rotate(45deg) scale(0); margin-top: -2px; transition: transform .28s cubic-bezier(.22,1.4,.36,1); }
+.pg-cliente .svc[role="checkbox"].is-on .row-mark { background: #151515; border-color: #151515; }
+.pg-cliente .svc[role="checkbox"].is-on .row-mark::after { transform: rotate(45deg) scale(1); }

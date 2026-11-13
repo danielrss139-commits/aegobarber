@@ -120,15 +120,24 @@
       (st.data ? '' : '<button type="button" class="btn btn-ghost btn-block" data-ir="s2">Escolher o dia</button>') +
       '</div>';
   }
+  // vários serviços juntos (ex.: pigmentação + sobrancelha): somam preço e tempo num agendamento só
+  function combinar() {
+    var l = (st.sel || []).map(function (id) { return st.servicos.filter(function (s) { return s.id === id; })[0]; }).filter(Boolean);
+    if (!l.length) return null;
+    if (l.length === 1) return l[0];
+    return { id: l[0].id, ids: l.map(function (s) { return s.id; }), nome: l.map(function (s) { return s.nome; }).join(' + '),
+      preco: l.reduce(function (t, s) { return t + Number(s.preco || 0); }, 0),
+      duracao: l.reduce(function (t, s) { return t + Number(s.duracao || 0); }, 0), icone: l[0].icone, descricao: '' };
+  }
   function renderServicos(anim) {
     $('servicos').innerHTML = st.servicos.map(function (s, i) {
-      var on = st.servico && st.servico.id === s.id, x = extra(s);
+      var on = (st.sel || []).indexOf(s.id) >= 0, x = extra(s);
       var th = '<span class="thumb" aria-hidden="true">' + (x.foto ? '<img src="' + esc(x.foto) + '" alt="" width="52" height="52" decoding="async"' + (i ? ' loading="lazy"' : '') + '>' : JC.icone(s)) + '</span>';
-      return '<li class="reveal' + (revelados ? ' is-in' : '') + '" style="--i:' + i + '"><button type="button" class="row svc opt' + (on ? ' is-on' : '') + '" role="radio" aria-checked="' + !!on + '" data-id="' + esc(s.id) + '">' +
+      return '<li class="reveal' + (revelados ? ' is-in' : '') + '" style="--i:' + i + '"><button type="button" class="row svc opt' + (on ? ' is-on' : '') + '" role="checkbox" aria-checked="' + !!on + '" data-id="' + esc(s.id) + '">' +
         th +
         '<span class="row-main"><span class="row-title">' + esc(s.nome) + '</span><span class="row-sub" style="display:block">' + esc(dur(s.duracao)) + '</span></span>' +
         '<span class="row-end">' + esc(U.brlCurto(s.preco)) + '<span class="row-mark" aria-hidden="true"></span></span></button>' +
-        (on ? fotoHTML(s, anim) : '') + '</li>';
+        (on && s.id === st.ultimo ? fotoHTML(s, anim) : '') + '</li>';
     }).join('');
     if (!revelados) observarLinhas();
   }
@@ -146,15 +155,24 @@
     var ir = e.target.closest('[data-ir]');
     if (ir) { rolarPara(ir.dataset.ir); return; }
     var b = e.target.closest('.row'); if (!b || st.feito) return;
-    var mesmo = st.servico && st.servico.id === b.dataset.id;
-    var novo = st.servicos.filter(function (s) { return s.id === b.dataset.id; })[0];
-    if (!novo) return;
-    st.servico = novo;
+    var id = b.dataset.id;
+    if (!st.servicos.some(function (s) { return s.id === id; })) return;
+    st.sel = st.sel || [];
+    var k = st.sel.indexOf(id), mesmo = false;
+    if (k >= 0) { st.sel.splice(k, 1); if (st.ultimo === id) st.ultimo = st.sel[st.sel.length - 1] || null; }
+    else { st.sel.push(id); st.ultimo = id; }
+    st.servico = combinar();
     revelados = true;
+    if (!st.servico) {
+      msgHorario(''); renderServicos(false);
+      ['s2', 's3', 's4'].forEach(function (x) { $(x).classList.add('is-locked'); });
+      st.inicio = null; atualizarBarra(); return;
+    }
+    st.inicio = null;
     if (!mesmo) {
       msgHorario('');
       renderServicos(true);
-      var nb = $('servicos').querySelector('.row.is-on');
+      var nb = $('servicos').querySelector('.row[data-id="' + st.ultimo + '"]');
       if (nb) setTimeout(function () {
         var r = nb.getBoundingClientRect();
         if (r.top < 0 || r.top > window.innerHeight * .45) window.scrollTo({ top: r.top + window.scrollY - 16, behavior: reduz ? 'auto' : 'smooth' });
@@ -332,7 +350,7 @@
     }
     $('nlivres').textContent = st.livres.length + (st.livres.length === 1 ? ' livre' : ' livres');
     // entra com leve tilt só quando muda o dia/serviço (atualização ao vivo não anima de novo)
-    var chave = st.data + '|' + (st.servico && st.servico.id), anim = !reduz && chave !== ultimaGrade;
+    var chave = st.data + '|' + (st.servico && st.servico.id + ':' + st.servico.duracao), anim = !reduz && chave !== ultimaGrade;
     ultimaGrade = chave;
     box.innerHTML = '<div class="slots" role="radiogroup" aria-labelledby="t3">' + st.livres.map(function (t, i) {
       var on = st.inicio === t;
@@ -399,7 +417,7 @@
     $('s4').classList.toggle('is-done', nomeOk() && telOk());
     if (!st.servico) { bar.classList.remove('is-on'); return; }
     bar.classList.add('is-on');
-    $('sum1').textContent = st.servico.nome + ' · ' + U.brlCurto(st.servico.preco);
+    $('sum1').textContent = (st.servico.ids ? st.servico.ids.length + ' serviços' : st.servico.nome) + ' · ' + U.brlCurto(st.servico.preco) + (st.servico.ids ? ' · ' + dur(st.servico.duracao) : '');
     var p = [];
     if (st.data) p.push(cap(diaLongo(st.data)));
     $('sum2').textContent = st.inicio != null ? p.join(' ') + ' às ' + U.hhmm(st.inicio)
@@ -532,7 +550,7 @@
   }
 
   function reiniciar() {
-    st.feito = false; st.servico = null; st.data = null; st.inicio = null; st.livres = [];
+    st.feito = false; st.servico = null; st.sel = []; st.ultimo = null; st.data = null; st.inicio = null; st.livres = [];
     $('nome').value = ''; $('zap').value = '';
     msgHorario('');
     ['s2', 's3', 's4'].forEach(function (id) { $(id).classList.add('is-locked'); });
@@ -569,7 +587,7 @@
     st.cfg = cfg; if (cfg && cfg.existe !== false) { renderTrust(cfg); renderRodape(cfg); }
     if (JSON.stringify(lista) !== JSON.stringify(st.servicos)) {   // catálogo mudou no painel
       st.servicos = lista;
-      if (st.servico) st.servico = lista.filter(function (s) { return s.id === st.servico.id; })[0] || null;
+      st.sel = (st.sel || []).filter(function (id) { return lista.some(function (s) { return s.id === id; }); }); st.servico = combinar();
       if (pronto()) { renderServicos(); atualizarBarra(); }
     }
     if (!pronto()) { emBreve(); return; }
